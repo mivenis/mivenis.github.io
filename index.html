@@ -183,6 +183,149 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/17/git-guidebook/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Geng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mivenis">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/17/git-guidebook/" class="post-title-link" itemprop="url">git guidebook</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-17 19:25:58 / 修改时间：23:48:10" itemprop="dateCreated datePublished" datetime="2022-11-17T19:25:58+08:00">2022-11-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><pre><code>mkdir：     XX (创建一个空目录 XX指目录名)
+pwd：     显示当前目录的路径。
+git init     把当前的目录变成可以管理的git仓库，生成隐藏.git文件。
+git add XX    把xx文件添加到暂存区去。
+git commit –m “XX” 提交文件 –m 后面的是注释。
+git status    查看仓库状态
+git branch master main  将master分支修改为main分支
+git diff XX   查看XX文件修改了那些内容
+git log     查看历史记录
+
+git reset --hard HEAD^ 或者 git reset --hard HEAD~ 回退到上一个版本  (如果想回退到100个版本，使用git reset –hard HEAD~100 )
+
+cat XX     查看XX文件内容
+git reflog    查看历史记录的版本号id
+
+git checkout -- XX 把XX文件在工作区的修改全部撤销。
+
+git rm XX     删除XX文件
+
+My token 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
+
+git remote add origin https://&lt;TOKEN&gt;@github.com/&lt;user_name&gt;/&lt;repo_name&gt;.git 关联一个远程库
+
+git remote set-url origin [url]  更改远程连接
+
+git remote rm origin 移除
+
+git remote add origin [url]设置
+
+git push –u(第一次要用-u 以后不需要) origin main 把当前master分支推送到远程库
+
+git clone https://&lt;TOKEN&gt;@github.com/&lt;user_name&gt;/&lt;repo_name&gt;.git 从远程库中克隆
+
+git remote set-url origin  https://&lt;your_token&gt;@github.com/&lt;USERNAME&gt;/&lt;REPO&gt;.git修改现有项目的url
+
+git rev-list --objects --all | grep &quot;$(git verify-pack -v .git/objects/pack/*.idx | sort -k 3 -n | tail -10 | awk &#39;&#123;print$1&#125;&#39;)&quot;查  看有哪些大文件
+
+git filter-branch --force --index-filter &#39;git rm -rf --cached --ignore-unmatch 文件/文件夹&#39; --prune-empty --tag-name-filter cat -- --all 移除对文件/文件夹的引用
+
+git for-each-ref --format=‘delete %(refname)‘ refs/original | git update-ref --stdin
+rm -rf .git/refs/original/
+git reflog expire --expire=now --all
+git gc --prune=now
+git gc --aggressive --prune=now回收空间
+
+git push -f origin  覆盖提交 解决error: failed to push some refs to &#39;xxxx
+
+git remote –v 查看远程库的详细信息
+
+git push origin main Git会把master分支推送到远程库对应的远程分支上
+
+git checkout –b dev 创建dev分支 并切换到dev分支上
+
+git branch 查看当前所有的分支
+
+git checkout master 切换回master分支
+
+git merge dev  在当前的分支上合并dev分支
+
+git branch –d dev 删除dev分支
+
+git branch name 创建分支
+
+git config --global http.proxy 127.0.0.1:7890  设置git的vpn代理 7890为vpn端口
+
+git config --global --unset http.proxy  上述操作逆向操作
+
+git config --global http.proxy *#查看git的http代理配置* 
+
+git config --global https.proxy *#查看git的https代理配置* 
+
+git config --global -l *#查看git的所有配置*
+
+git stash 把当前的工作隐藏起来 等以后恢复现场后继续工作
+
+git stash list 查看所有被隐藏的文件列表
+
+git stash apply 恢复被隐藏的文件，但是内容不删除
+
+git stash drop 删除文件
+
+git stash pop 恢复文件的同时 也删除文件
+
+git remote 查看远程库的信息
+</code></pre>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/17/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -315,9 +458,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
       </div>
   </nav>
 </div>
