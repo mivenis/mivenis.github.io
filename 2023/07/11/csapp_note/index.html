@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1 计算机系统漫游计算机系统是由硬件和系统软件组成，共同工作来运行应用程序 1.1 信息就是 位 + 上下文 hello.c  123456#include &lt;stdio.h&gt;int main()&amp;#123;  printf(&quot;hello, world\n&quot;);  return 0;&amp;#125;    源程序实际上是由值为 1 和 0 组成的位序列， 每8个一组 称">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mivenis">
+<meta property="og:url" content="http://example.com/2023/07/11/csapp_note/index.html">
+<meta property="og:site_name" content="Mivenis">
+<meta property="og:description" content="1 计算机系统漫游计算机系统是由硬件和系统软件组成，共同工作来运行应用程序 1.1 信息就是 位 + 上下文 hello.c  123456#include &lt;stdio.h&gt;int main()&amp;#123;  printf(&quot;hello, world\n&quot;);  return 0;&amp;#125;    源程序实际上是由值为 1 和 0 组成的位序列， 每8个一组 称">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:/Users/mivenis/AppData/Roaming/Typora/typora-user-images/image-20230214180352101.png">
+<meta property="og:image" content="c:/Users/mivenis/AppData/Roaming/Typora/typora-user-images/image-20230214205558403.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211012164918354.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211012165843421.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211012170608185.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211013201230786.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211013202352457.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211013203214452.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211013203353022.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211013203436697.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211013203759448.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211013210658660.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211013210747333.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211013210907358.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211013211254566.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211018193539768.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211018193718736.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211018193832576.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211018194953722.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211018195119275.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211018195219182.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211018195429056.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211018195547507.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211018195910032.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211018195931875.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019161859523.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019162403043.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211027205324781.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019162557509.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019162713731.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019163927315.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019164301314.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211027210130506.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211028160913179.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019182716166.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019183215880.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019183345922.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211019185013695.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211019185207461.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211019185918917.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019190043251.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019190153060.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211019190341757.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211019190647726.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211019190904576.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211019191334041.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211019191425649.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211019191650525.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211019191717346.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211026190031541.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211026190253407.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211026191034818.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211026192016123.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211026200140927.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211030190925758.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211030191055736.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211030191757738.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211030192318810.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211030192536608.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211030193742098.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211030193914042.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211030195013917.png">
+<meta property="og:image" content="http://example.com/2023/07/11/csapp_note/csapp_note.assets/image-20211030195035818.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211030195427038.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211031151715192.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211031151934921.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211031151952727.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20211031152028629.png">
+<meta property="og:image" content="http://example.com/csapp_note.assets/image-20210904082038789.png">
+<meta property="article:published_time" content="2023-07-11T08:39:48.863Z">
+<meta property="article:modified_time" content="2023-02-14T14:17:23.901Z">
+<meta property="article:author" content="Geng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:/Users/mivenis/AppData/Roaming/Typora/typora-user-images/image-20230214180352101.png">
+
+<link rel="canonical" href="http://example.com/2023/07/11/csapp_note/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Mivenis</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mivenis</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/11/csapp_note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Geng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mivenis">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-11 16:39:48" itemprop="dateCreated datePublished" datetime="2023-07-11T16:39:48+08:00">2023-07-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-14 22:17:23" itemprop="dateModified" datetime="2023-02-14T22:17:23+08:00">2023-02-14</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-计算机系统漫游"><a href="#1-计算机系统漫游" class="headerlink" title="1 计算机系统漫游"></a>1 计算机系统漫游</h1><p>计算机系统是由硬件和系统软件组成，共同工作来运行应用程序</p>
+<h2 id="1-1-信息就是-位-上下文"><a href="#1-1-信息就是-位-上下文" class="headerlink" title="1.1 信息就是 位 + 上下文"></a>1.1 信息就是 位 + 上下文</h2><blockquote>
+<p><strong>hello.c</strong></p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;hello, world\n&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>源程序实际上是由值为 1 和 0 组成的位序列， 每8个一组 称为字节  即程序员通过编辑器创建并保存的文本文件，文件名是 hello.c</p>
+<ul>
+<li>每个字节表示程序中的某些文本字符</li>
+</ul>
+<p>大部分现在计算机系统都使用 ASCII 标准来表示文本字符</p>
+<blockquote>
+<p><strong>文本文件</strong></p>
+</blockquote>
+<p>像 hello.c 这样只由 ASCII 字符构成的文件称为 <strong>文本文件</strong>， 其他所有文件都称为 <strong>二进制文件</strong></p>
+<p>hello.c 表示方法说明一个基本思想，系统中的所有信息 </p>
+<ul>
+<li>磁盘文件</li>
+<li>内存中的程序</li>
+<li>用户数据</li>
+<li>网络上传送的数据</li>
+</ul>
+<p>都是由一串比特表示的。</p>
+<p>区分不同数据对象的唯一方法是我们读到这些数据对象时的上下文</p>
+<ul>
+<li>比如在不同的上下文中， 一个同样的字节序列可能表示一个整数，浮点数，字符串或者机器指令</li>
+</ul>
+<h2 id="1-2-程序被其他程序翻译成不同的格式"><a href="#1-2-程序被其他程序翻译成不同的格式" class="headerlink" title="1.2 程序被其他程序翻译成不同的格式"></a>1.2 程序被其他程序翻译成不同的格式</h2><p>Programs are Translated by Other Programs into Different Forms</p>
+<p>在 Unix 系统上，从源文件到目标文件的转换是由<strong>编译器驱动程序</strong>完成的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">linux&gt; </span><span class="language-bash">gcc -o hello hello.c</span></span><br></pre></td></tr></table></figure>
+
+<p>上述代码中， GCC 编译器驱动程序读取源程序文件 hello.c 并把它翻译成一个可执行文件 hello 一共四个步骤</p>
+<p><strong>预处理阶段</strong></p>
+<ul>
+<li>根据以 # 开头的命令，修改原始 C程序<ul>
+<li>比如 #include &lt;stdio.h&gt; 会告诉预处理器 读取系统头文件 stdio.h 的内容</li>
+<li>并将它直接插入程序文本中，就得到另外一个 C 程序，通常结尾.i</li>
+</ul>
+</li>
+</ul>
+<p><strong>编译阶段</strong></p>
+<ul>
+<li><strong>编译器</strong> 将文本文件 hello.i 翻译成文本文件 .s</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">main:</span><br><span class="line">	subq $8, %rsp</span><br><span class="line">	movl $.LCO, %edi</span><br><span class="line">	call puts</span><br><span class="line">	movl $0, %eax</span><br><span class="line">	addq $8, %rsp</span><br><span class="line">	ret</span><br></pre></td></tr></table></figure>
+
+<p>汇编语言 为不同的高级语言的不同编译器提供了通用的输出语言</p>
+<blockquote>
+<p><strong>汇编阶段</strong></p>
+</blockquote>
+<ul>
+<li>汇编器将 hello.s 翻译成机器语言指令，并将这些指令 打包变成 relocatable object program</li>
+<li>并将结果保存在目标文件 hello.o</li>
+<li>hello.o 文件是一个二进制文件</li>
+</ul>
+<blockquote>
+<p><strong>链接阶段</strong></p>
+</blockquote>
+<ul>
+<li>注意到 printf 被调用</li>
+<li>printf 函数存在一个名为printf.o 的单独的预编译好的目标文件中</li>
+<li>链接器 ld 负责处理这种合并，就得到了 hello 文件</li>
+<li>hello 文件是一个可执行目标文件</li>
+</ul>
+<blockquote>
+<p><strong>GCC</strong></p>
+</blockquote>
+<p>是由 GNU 项目开发出来的众多有用工具之一</p>
+<p>GNU 环境包括 EMACS 编辑器, GCC 编译器， GDB 调试器， 汇编起， 链接器， 处理二进制文件工具等</p>
+<h2 id="1-4-处理器读并解释存储在内存中的指令"><a href="#1-4-处理器读并解释存储在内存中的指令" class="headerlink" title="1.4 处理器读并解释存储在内存中的指令"></a>1.4 处理器读并解释存储在内存中的指令</h2><p>想要运行 hello 程序， 通过 Shell 命令解释器</p>
+<ul>
+<li>它输出一个提示符，等待输入一个命令行，然后执行这个命令</li>
+<li>假设该命令行的第一个单词不是一个内置的shell 命令，那么shell 会假设是一个可执行文件的名字，它将加载并运行这个文件</li>
+</ul>
+<h3 id="1-4-1-系统的硬件组成"><a href="#1-4-1-系统的硬件组成" class="headerlink" title="1.4.1 系统的硬件组成"></a>1.4.1 系统的硬件组成</h3><p><img src="C:/Users/mivenis/AppData/Roaming/Typora/typora-user-images/image-20230214180352101.png" alt="image-20230214180352101"></p>
+<blockquote>
+<p><strong>总线</strong></p>
+</blockquote>
+<p>贯穿整个系统的是一组电子管道， 负责携带信息字节并在各个部件间传递</p>
+<ul>
+<li>通常总线被设计为传送定长的字节块，也就是字 word<ul>
+<li>不同系统不一样，一般是 4字节32位或者8字节64位</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>I&#x2F;O 设备</strong></p>
+</blockquote>
+<ul>
+<li>是系统与外部世界的联系通道</li>
+<li>一般有四个<ul>
+<li>输入的 鼠标和键盘</li>
+<li>输出的 显示器</li>
+<li>长期用于存储数据和程序的 磁盘驱动器</li>
+</ul>
+</li>
+</ul>
+<p><strong>每个 I&#x2F;O 设备都通过一个控制器或者适配器与 I&#x2F;O 总线相连</strong></p>
+<ul>
+<li>控制器和适配器之间的区别主要在于他们的封装方式<ul>
+<li>控制器是 I&#x2F;O 设备本身或者系统的电路板上的芯片组</li>
+<li>适配器是一块插在主板插槽上的卡</li>
+</ul>
+</li>
+<li>不过功能都是在I&#x2F;O总线和 I&#x2F;O 设备之间传递信息</li>
+</ul>
+<blockquote>
+<p><strong>主存</strong></p>
+</blockquote>
+<p>主存是一个临时存储设备，在处理器执行程序的时候， 用来存储程序和程序处理的数据</p>
+<ul>
+<li>物理上 说主存由一组动态随机存取存储器 (DRAM) 芯片组成</li>
+<li>逻辑上 存储器是一个线性的字节数组，每个字节都有唯一的地址（数组索引）</li>
+</ul>
+<blockquote>
+<p><strong>处理器CPU</strong></p>
+</blockquote>
+<p>用来解释 &#x2F; 执行存储在主存中指令的引擎</p>
+<ul>
+<li>处理器的核心是一个大小为一个字的存储设备(寄存器), 称为 PC<ul>
+<li>任何时刻， PC都指向主存中的某条机器语言指令</li>
+</ul>
+</li>
+</ul>
+<p>CPU：中央处理单元；ALU：算术&#x2F;逻辑单元；PC：程序计数器；USB：通用串行总线</p>
+<p>处理器从程序计数器指向的内存处读取指令，解释指令中的位，执行该指令指示的简单操作，然后更新 PC，使其指向下一条指令，而这条指令并不一定和在内存中刚刚执行的指令相邻。</p>
+<p><strong>CPU 在指令的要求下可能会做下面的操作</strong></p>
+<ul>
+<li><strong>加载</strong>: 从主存复制一个字节或者一个字 到寄存器，覆盖原来寄存器中内容</li>
+<li><strong>存储</strong>: 从寄存器复制一个字节或者一个字到主存的某个位置，覆盖主存位置</li>
+<li><strong>操作</strong>: 把两个寄存器中的内容复制到 ALU， ALU 对这两个字进行算数运算，并将结果存放到一个寄存器中，以覆盖该寄存器中原来的内容</li>
+<li><strong>跳转</strong>: 从指令本身抽取一个字，并将这个字复制到程序计数器 PC中，以覆盖PC中原来的值</li>
+</ul>
+<h3 id="1-4-2-运行-Hello-程序员"><a href="#1-4-2-运行-Hello-程序员" class="headerlink" title="1.4.2 运行 Hello 程序员"></a>1.4.2 运行 Hello 程序员</h3><ul>
+<li>初始时， shell 发现我们输入了 <code>./hello</code>, shell 将字符逐一读到寄存器中，再把它放入到内存中</li>
+<li>当我们敲了回车键， shell 执行一系列指令来夹在可执行的hello 文件<ul>
+<li>这些指令将 hello 目标文件中的代码和数据从磁盘复制到主存</li>
+<li>数据包括最终被输出的字符串 “hello, world\n”</li>
+</ul>
+</li>
+</ul>
+<p>当然也可以利用 直接存储器存取 (DMA) ，数据可以不通过处理器而直接从磁盘到达主存</p>
+<h2 id="1-5-高速缓存至关重要"><a href="#1-5-高速缓存至关重要" class="headerlink" title="1.5 高速缓存至关重要"></a>1.5 高速缓存至关重要</h2><p>实际上刚才的例子揭示出一个重要的问题， 系统花费大量的时间，把信息从一个地方挪到另外一个地方</p>
+<ul>
+<li>hello 程序的机器指令最初 存放在磁盘上</li>
+<li>当程序加载的时候， 他们被复制到主存</li>
+<li>当处理器运行程序时， 指令又从主存复制到处理器</li>
+</ul>
+<p>同理对于 stirng “hello, world&#x2F;n”, 开始时在磁盘上，然后被复制到主存，最后从主存上复制到显示设备</p>
+<p>从程序员的角度来说， 这些都是额外开销，希望能够避免</p>
+<blockquote>
+<p><strong>Main Memory</strong></p>
+</blockquote>
+<p>Main memory refers <strong>to physical memory that is internal to the computer</strong>. The word <strong>main</strong> is used to distinguish it from external mass storage devices such as disk drives</p>
+<p>一个典型的寄存器文件只存储了几百字节的信息，但是主存里存放了十几亿的字节</p>
+<ul>
+<li>随着半导体技术的进步， 存储器和主存之间的差距还在持续增大</li>
+<li>加快处理器的运行速度 比 加快主存的运行速度要容易和便宜的多</li>
+</ul>
+<p>针对这种差异， 系统设计者采用了更小更快的存储设备， 称为 Cache Memory</p>
+<p>几个不同的 Level</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>位置</th>
+<th>容量</th>
+<th>访问速度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>L1</td>
+<td>位于处理器芯片</td>
+<td>数万字节</td>
+<td>媲美寄存器</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>通过特殊总线连接处理器</td>
+<td>数十万到百万字节</td>
+<td>比L1慢4-5倍</td>
+</tr>
+<tr>
+<td>L3</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>L1 L2 高速缓存是用一种叫做 静态随机访问存储器 SRAM 的硬件技术实现</p>
+<ul>
+<li>通过让高速缓存中放上可能经常访问的数据， 大部分的内存操作都能在高速缓存中完成</li>
+</ul>
+<h2 id="1-6-存储设备形成层次结构"><a href="#1-6-存储设备形成层次结构" class="headerlink" title="1.6 存储设备形成层次结构"></a>1.6 存储设备形成层次结构</h2><blockquote>
+<p>*<em>在处理器和一个较大较慢设备（比如主存）之间 插入一个更小更快的存储设备已经成为一个普遍的观念</em></p>
+</blockquote>
+<ul>
+<li>存储器层次结构的主要思想是 上一层的存储器作为下一层存储器的高速缓存</li>
+</ul>
+<h2 id="1-7-操作系统管理硬件"><a href="#1-7-操作系统管理硬件" class="headerlink" title="1.7 操作系统管理硬件"></a>1.7 操作系统管理硬件</h2><p><strong>操作系统有两个基本功能</strong></p>
+<ul>
+<li>防止硬件被失控的应用程序滥用</li>
+<li>向应用程序提供简单一致的机制来控制复杂而不相同的低级硬件设备</li>
+</ul>
+<p>操作系统通过几个基本的抽象概念(进程 &#x2F; 虚拟内存 &#x2F; 文件) 来实现这两个功能</p>
+<ul>
+<li>文件是对 I&#x2F;O 设备的抽象</li>
+<li>虚拟内存是对主存和磁盘 I&#x2F;O 设备的抽象表示</li>
+<li>进程是对处理器 &#x2F; 主存 &#x2F; IO设备的抽象表示</li>
+</ul>
+<h2 id="1-7-进程"><a href="#1-7-进程" class="headerlink" title="1.7 进程"></a>1.7 进程</h2><p>像 hello 这样的程序在 现代系统上运行时， 操作系统会提供一种假象，好想系统上只有这个程序运行呢</p>
+<ul>
+<li>程序看上去是独占地使用处理器 &#x2F; 主存 &#x2F; IO设备</li>
+<li>处理器看上去就像在不间断的一条接着一条地执行程序中的指令</li>
+</ul>
+<blockquote>
+<p><strong>上下文</strong></p>
+</blockquote>
+<p>操作系统保持跟踪进程运行所需要的所有状态信息</p>
+<ul>
+<li><p>任意时刻， 单处理器系统都只能执行一个进程的代码</p>
+</li>
+<li><p>当操作系统决定把控制权从当前进程转移到某个新的进程时，新进程会从上次停的地方再次开始</p>
+</li>
+<li><p>从一个进程到另一个进程的转换，是由操作系统内核管</p>
+</li>
+<li><p>内核是操作系统代码常驻内存的部分</p>
+</li>
+<li><p>注意 内核不是一个独立的进程</p>
+<ul>
+<li>它是系统管理全部进程所用代码和数据结构的集合</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-7-3-Virtual-Memory"><a href="#1-7-3-Virtual-Memory" class="headerlink" title="1.7.3 Virtual Memory"></a>1.7.3 Virtual Memory</h3><p><strong><img src="C:/Users/mivenis/AppData/Roaming/Typora/typora-user-images/image-20230214205558403.png" alt="image-20230214205558403"></strong></p>
+<ul>
+<li>共享库 Shared Library 主要是存放类似 C标准库 和 数学库这样的共享库的代码和数据的区域</li>
+</ul>
+<blockquote>
+<p><strong>Stack</strong></p>
+</blockquote>
+<ul>
+<li>位于用户虚拟地址空间顶部的是用户栈， 编译器用它实现函数调用<ul>
+<li>每次调用函数时，栈就会增长</li>
+<li>从函数返回，栈就会收缩</li>
+</ul>
+</li>
+<li>内核虚拟内存<ul>
+<li>地址空间顶部的区域是为内核保留</li>
+<li>不允许应用程序 读写这个区域的内容， 或者直接调用内核代码定义的函数</li>
+<li>必须调用内核来执行这些操作</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-7-4-Files"><a href="#1-7-4-Files" class="headerlink" title="1.7.4 Files"></a>1.7.4 Files</h3><p>文件就是字节序列</p>
+<ul>
+<li>每个 IO 设备， 包括磁盘， 键盘， 显示器， 甚至网络都可以看为文件</li>
+<li>系统中的所有输入输出都通过使用一小组 Unix IO 系统函数调用读写文件实现</li>
+</ul>
+<p>文件向应用程序提供了一个统一的视图，来看待系统中各式各样的  I&#x2F;O 设备</p>
+<ul>
+<li>文件是对 I&#x2F;O 设备的抽象</li>
+<li>虚拟内存是对程序存储器的抽象</li>
+<li>进程是对一个正在运行的程序的抽象</li>
+<li>虚拟机是对 整个计算机的抽象</li>
+</ul>
+<h1 id="2-信息的表示和处理"><a href="#2-信息的表示和处理" class="headerlink" title="2 信息的表示和处理"></a>2 信息的表示和处理</h1><h2 id="2-0-引言"><a href="#2-0-引言" class="headerlink" title="2.0 引言"></a>2.0 引言</h2><p>构造存储和处理信息的机器时， 二进制 &#x2F; 二值信号能够很容易被表示 &#x2F; 存储 &#x2F; 传输</p>
+<p>很有意思的现象</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">200 * 300 * 400 * 500 = -884 901 888</span><br><span class="line"></span><br><span class="line">(3.14 + 1e20) - 1e20 = 0.0</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="2-1-信息存储"><a href="#2-1-信息存储" class="headerlink" title="2.1 信息存储"></a>2.1 信息存储</h2><p>大多数计算机使用 8 位的块，或者字节 作为最小的可寻址的内存单位</p>
+<ul>
+<li>机器级程序将内存视为一个非常大的字节数组<ul>
+<li>被称为虚拟内存</li>
+<li>内存中的每个字节都有一个唯一的数字来标识，称为地址</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-1-1-十六进制表示法"><a href="#2-1-1-十六进制表示法" class="headerlink" title="2.1.1 十六进制表示法"></a>2.1.1 十六进制表示法</h3><img src="csapp_note.assets/image-20211012164918354.png" alt="image-20211012164918354" style="zoom:50%;" />
+
+
+
+
+
+<h3 id="2-1-2-字数据大小"><a href="#2-1-2-字数据大小" class="headerlink" title="2.1.2 字数据大小"></a>2.1.2 字数据大小</h3><p>word size 指明指针数据的标称大小(nominal size)</p>
+<ul>
+<li>因为虚拟地址是以这样的字来编码</li>
+<li>对于一个字长为 w 位 的机器来说， 虚拟地址的范围为 0 ~ 2^w - 1<ul>
+<li>程序最多访问 2^w 个字节</li>
+</ul>
+</li>
+</ul>
+<p>32位字长限制虚拟空间位 4GB</p>
+<img src="csapp_note.assets/image-20211012165843421.png" alt="image-20211012165843421" style="zoom:50%;" />
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">linux&gt; </span><span class="language-bash">gcc -m32 prog.c</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">linux&gt; </span><span class="language-bash">gcc -m64 prog.c</span></span><br><span class="line"></span><br><span class="line">针对不同的字长 进行编译</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="2-1-3-寻址和字节顺序"><a href="#2-1-3-寻址和字节顺序" class="headerlink" title="2.1.3 寻址和字节顺序"></a>2.1.3 寻址和字节顺序</h3><p>如何跨越多字节的程序对象， 会考虑两个方向</p>
+<ul>
+<li>对象的地址是什么</li>
+<li>在内存中如何排列这些字节</li>
+</ul>
+<p>一般会使用字节中最小的地址</p>
+<p>假设一个类型为 int 的变量 x 的地址为 0x100</p>
+<p>那么 x的4个字节会被放在 <code>0x100, 0x101, 0x102, 0x103</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[Xw-1, Xw-2, .... X1, X0]</span><br><span class="line">|											｜</span><br><span class="line">最高有效位							最低有效位</span><br><span class="line"></span><br><span class="line">最高有效位字节</span><br><span class="line">[Xw-1, Xw-2.....Xw-8]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>实际上也就是大端小端问题，用来处理网络字节序 会碰到</p>
+<ul>
+<li>最低有效字节在最前面的方法，称为小端法 little endian</li>
+<li>最高有效字节在最前面， 称为大端 Big endian</li>
+</ul>
+<p><img src="/csapp_note.assets/image-20211012170608185.png" alt="image-20211012170608185"></p>
+<p>对于大多数情况下，机器使用的字节顺序 完全不可见</p>
+<ul>
+<li>但是如果在网络中传输数据会有问题</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">		使用强制类型转换来 访问和打印不同程序对象的字节表示</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stddef.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">char</span>* byte_pointer; <span class="comment">//每次只引用一个字节序列</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">show_bytes</span><span class="params">(byte_pointer start, <span class="type">size_t</span> len)</span>&#123;</span><br><span class="line">    <span class="type">size_t</span> i;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; len; i++)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%.2x &quot;</span>, start[i]);	<span class="comment">//格式化指令，必须由两个数字的十六进制格式输出</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">show_int</span><span class="params">(<span class="type">int</span> x)</span>&#123;</span><br><span class="line">    show_bytes((byte_pointer)&amp;x, <span class="keyword">sizeof</span>(<span class="type">int</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">show_float</span><span class="params">(<span class="type">float</span> x)</span>&#123;</span><br><span class="line">    show_bytes((byte_pointer)&amp;x, <span class="keyword">sizeof</span>(<span class="type">float</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">show_pointer</span><span class="params">(<span class="type">void</span>* x)</span>&#123;</span><br><span class="line">    show_bytes((byte_pointer)&amp;x, <span class="keyword">sizeof</span>(<span class="type">void</span> *));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">test_show_bytes</span><span class="params">(<span class="type">int</span> val)</span>&#123;</span><br><span class="line">    <span class="type">int</span> ival = val;</span><br><span class="line">    <span class="type">float</span> fval = (<span class="type">float</span>)val;</span><br><span class="line">    <span class="type">int</span>* pval = &amp;ival;</span><br><span class="line">    show_int(ival);    <span class="comment">//39 30 00 00 </span></span><br><span class="line">    show_float(fval);  <span class="comment">//00 e4 40 46 </span></span><br><span class="line">    show_pointer(pval);<span class="comment">//c8 69 37 eb fe 7f 00 00 </span></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"><span class="comment">//12345 -&gt; 0x 3039</span></span><br><span class="line"></span><br><span class="line">    test_show_bytes(<span class="number">12345</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>发现 int 中 39 先输出， 说明是小端机器</li>
+<li>同时发现 数组和指针的关系<ul>
+<li>数组可以引用指针</li>
+<li>指针可以指向 数组位置</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man ascii 可以查看 ASCII 表</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="2-1-6-bool"><a href="#2-1-6-bool" class="headerlink" title="2.1.6 bool"></a>2.1.6 bool</h3><p>bool 运算</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">~		not</span><br><span class="line">0 -&gt; 1</span><br><span class="line">1 -&gt; 0</span><br><span class="line">&amp;   and</span><br><span class="line">		0  1</span><br><span class="line">0   0  0 </span><br><span class="line">1   0  1</span><br><span class="line">|    or</span><br><span class="line">		 0 1</span><br><span class="line">0  0 1</span><br><span class="line">1  1 1</span><br><span class="line"></span><br><span class="line">^    exclusive or</span><br><span class="line">	0 1</span><br><span class="line">0 0 1</span><br><span class="line">1 1 0 </span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/csapp_note.assets/image-20211013201230786.png" alt="image-20211013201230786"></p>
+<h3 id="2-1-7-C-语言中的位级运算"><a href="#2-1-7-C-语言中的位级运算" class="headerlink" title="2.1.7 C 语言中的位级运算"></a>2.1.7 C 语言中的位级运算</h3><blockquote>
+<p><strong>这种可以实现 不需要第三个变量的交换</strong></p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">inplace_swap</span><span class="params">(<span class="type">int</span>* x, <span class="type">int</span>* y)</span></span>&#123;</span><br><span class="line">  *y = *x ^ *y;</span><br><span class="line">  *x = *x ^ *y; <span class="comment">//step 2 </span></span><br><span class="line">  *y = *x ^ *y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">*x = *x ^ *x ^ *y = *y;</span><br><span class="line">*y = *y ^ *x ^ *y = *x;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="2-1-8-C-语言中的逻辑运算"><a href="#2-1-8-C-语言中的逻辑运算" class="headerlink" title="2.1.8 C 语言中的逻辑运算"></a>2.1.8 C 语言中的逻辑运算</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">||  -&gt; OR</span><br><span class="line"></span><br><span class="line">&amp;&amp;	-&gt; AND</span><br><span class="line"></span><br><span class="line">!		-&gt; NOT</span><br><span class="line"></span><br><span class="line">也称为 短路运算符， 如果第一个式子可以求出来值，那么就不会看后main的</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="2-1-9-C-语言中的移位运算"><a href="#2-1-9-C-语言中的移位运算" class="headerlink" title="2.1.9 C 语言中的移位运算"></a>2.1.9 C 语言中的移位运算</h3><ul>
+<li>逻辑右移<ul>
+<li>在左端 补 0</li>
+</ul>
+</li>
+<li>算数右移<ul>
+<li>左端补 0 或者 1 取决于最高位</li>
+</ul>
+</li>
+</ul>
+<img src="csapp_note.assets/image-20211013202352457.png" alt="image-20211013202352457" style="zoom:50%;" />
+
+
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>      lval = <span class="number">0xFEDCBA98</span> &lt;&lt; <span class="number">32</span>; <span class="comment">//  0xFEDCBA98</span></span><br><span class="line"><span class="type">int</span>      aval = <span class="number">0xFEDCBA98</span> &lt;&lt; <span class="number">36</span>; <span class="comment">//  0xFFEDCBA9</span></span><br><span class="line"><span class="type">unsigned</span> uval = <span class="number">0xFEDCBA98</span>u&lt;&lt; <span class="number">40</span>;<span class="comment">//   0x000FEDCBA</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>同时注意</strong></p>
+<ul>
+<li><p>c 语言在 位移量 K 很大的时候， 无法保证行为</p>
+</li>
+<li><p>一般的机器会采取 K &#x3D; K mod w</p>
+</li>
+<li><p>&lt;&lt; &gt;&gt; 的优先级比 + - 低</p>
+</li>
+<li><p>&#96;&#96;&#96;c<br>  1 &lt;&lt; 2 + 3 &lt;&lt; 4 会被认为 1 &lt;&lt; (2 + 3) &lt;&lt; 4</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 2.2 整数表示</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;img src=&quot;csapp_note.assets/image-20211013202935061.png&quot; alt=&quot;image-20211013202935061&quot; style=&quot;zoom:50%;&quot; /&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">C 和 C++ 都支持有符号数和 无符号数， Java 只支持 有符号数</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 2.2.2 无符号数的编码</span><br><span class="line"></span><br><span class="line">&gt; **无符号数编码的定义**</span><br><span class="line"></span><br><span class="line">```shell</span><br><span class="line">对于向量x = [Xw-1, Xw-2, Xw-3....X0];</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><img src="/csapp_note.assets/image-20211013203214452.png" alt="image-20211013203214452"></p>
+<p>该定义将一个长度为 w 的0，1 串子映射到非负整数上</p>
+<h3 id="2-2-3-补码编码"><a href="#2-2-3-补码编码" class="headerlink" title="2.2.3 补码编码"></a>2.2.3 补码编码</h3><p>主要想表示负数</p>
+<p>在这种定义中，字的最高位被解释为 negative weight</p>
+<p><img src="/csapp_note.assets/image-20211013203353022.png" alt="image-20211013203353022"></p>
+<p><img src="/csapp_note.assets/image-20211013203436697.png" alt="image-20211013203436697"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ex <span class="number">4</span> 位数字</span><br><span class="line">最大值可以表示 <span class="number">0111</span> -&gt; <span class="number">2</span>^<span class="number">2</span> + <span class="number">2</span>^<span class="number">1</span> + <span class="number">1</span> = <span class="number">7</span></span><br><span class="line">最小值可以表示 <span class="number">1000</span> -&gt; <span class="number">-2</span>^<span class="number">3</span> = <span class="number">-8</span></span><br><span class="line">  </span><br><span class="line">  这样就引入了不对称， 负数总比正数多一个</span><br><span class="line">  因为总有一半的数表示负数，另一半的数字表示非负</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p><img src="/csapp_note.assets/image-20211013203759448.png" alt="image-20211013203759448"></p>
+<h3 id="2-2-4-有符号数和无符号数之间的转换"><a href="#2-2-4-有符号数和无符号数之间的转换" class="headerlink" title="2.2.4 有符号数和无符号数之间的转换"></a>2.2.4 有符号数和无符号数之间的转换</h3><blockquote>
+<p><strong>ex2</strong></p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">short int v = -12345;</span><br><span class="line">unsigned short uv = (unsigned  short) v;</span><br><span class="line">printf(&quot;v = %d, uv = %u\n&quot;, v, uv);</span><br><span class="line"></span><br><span class="line">v的二进制补码表示</span><br><span class="line">1100111111000111</span><br><span class="line"></span><br><span class="line">uv 强制转换 btou  -&gt; 53191</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>ex1</strong></p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">  <span class="type">unsigned</span>  u = <span class="number">4294967295u</span>;</span><br><span class="line">  <span class="type">int</span> tu = (<span class="type">int</span>) u;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;u = %u, tu = %d\n&quot;</span>, u, tu);</span><br><span class="line"></span><br><span class="line">u 二进制表示 <span class="number">11111111111111111111111111111111</span></span><br><span class="line">tu = <span class="number">-1</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="2-2-5-C-语言中的有符号数和无符号数"><a href="#2-2-5-C-语言中的有符号数和无符号数" class="headerlink" title="2.2.5  C 语言中的有符号数和无符号数"></a>2.2.5  C 语言中的有符号数和无符号数</h3><ul>
+<li>一般而言， 机器使用补码编码， 也就是默认有符号数<ul>
+<li>如果想用无符号数， 最好使用 u</li>
+<li>12345u</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    <span class="type">int</span> x = <span class="number">-1</span>;</span><br><span class="line">    <span class="type">unsigned</span> u = <span class="number">2147483648</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;x = %u = %d\n&quot;</span>, x, x);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;u = %u = %d\n&quot;</span>, u, u);</span><br><span class="line"></span><br><span class="line"><span class="comment">//x = 4294967295 = -1</span></span><br><span class="line"><span class="comment">//u = 2147483648 = -2147483648</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>因此会有一些意想不到的 bug</p>
+<ul>
+<li>如果执行一个运算， 一个运算数是 有符号的，另外一个是无符号的</li>
+<li>那么 C 语言会隐式 将有符号数强制类型转换为 无符号数</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">比如</span><br><span class="line">  <span class="number">-1</span> &lt; <span class="number">0U</span>  --因为第二个运算数是无符号的， 第一个运算数会被换成 </span><br><span class="line">  <span class="number">4294967295U</span> &lt; <span class="number">0U</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>同时注意 C 语言中 TMin 的写法</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> INT_MAX 2147483647</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> INT_MIN (-INT_MAX - 1)</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h3 id="2-2-6-扩展一个数字的位表示"><a href="#2-2-6-扩展一个数字的位表示" class="headerlink" title="2.2.6 扩展一个数字的位表示"></a>2.2.6 扩展一个数字的位表示</h3><blockquote>
+<p><strong>将一个无符号数转换为一个更大的数据</strong></p>
+</blockquote>
+<ul>
+<li>只需要在前面补0就行， 被称为 零扩展 Zero Extension</li>
+</ul>
+<blockquote>
+<p><strong>将一个补码数字转换为更大数据类型</strong></p>
+</blockquote>
+<ul>
+<li>实施 Sign Extension</li>
+</ul>
+<img src="csapp_note.assets/image-20211013210658660.png" alt="image-20211013210658660" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+<h3 id="2-2-7-截断数字"><a href="#2-2-7-截断数字" class="headerlink" title="2.2.7 截断数字"></a>2.2.7 截断数字</h3><img src="csapp_note.assets/image-20211013210747333.png" alt="image-20211013210747333" style="zoom:50%;" />
+
+
+
+<p><strong>截断无符号数数字时</strong></p>
+<ul>
+<li>我们会将高位裁掉</li>
+</ul>
+<p><img src="/csapp_note.assets/image-20211013210907358.png" alt="image-20211013210907358"></p>
+<p>截断补码时， 将最高位转换为 符号为</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> c = <span class="number">63191</span>; <span class="comment">//0000 0000 0000 0000 1111 0110 1101 0111</span></span><br><span class="line"><span class="type">short</span> sc = (<span class="type">short</span>)c;		<span class="comment">//1111 0110 1101 0111</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, sc);			<span class="comment">//-2345</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/csapp_note.assets/image-20211013211254566.png" alt="image-20211013211254566"></p>
+<h3 id="2-2-8-关于有符号数和无符号数的建议"><a href="#2-2-8-关于有符号数和无符号数的建议" class="headerlink" title="2.2.8 关于有符号数和无符号数的建议"></a>2.2.8 关于有符号数和无符号数的建议</h3><blockquote>
+<p><strong>Example 1</strong></p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">float</span> <span class="title">sum_elements</span><span class="params">(<span class="type">float</span> a[], <span class="type">unsigned</span> length)</span></span>&#123;</span><br><span class="line">  <span class="type">int</span> i;</span><br><span class="line">  <span class="type">float</span> result = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt;= length - <span class="number">1</span>; i++)<span class="comment">//这段代码实际上有问题</span></span><br><span class="line">    result += a[i];</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line">因为 len = <span class="number">0</span> 的时候  len - <span class="number">1</span> = <span class="number">0xFFFFFFFF</span>, 是最大值</span><br><span class="line">  也就是说 a[i] 将会引用非法内存</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<blockquote>
+<p><strong>Example 2</strong></p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">strlongest</span><span class="params">(<span class="type">char</span>* s, <span class="type">char</span>* t)</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">strlen</span>(s) - <span class="built_in">strlen</span>(t) &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(__SIZE_TYPE__)</span></span><br><span class="line"><span class="keyword">typedef</span> __SIZE_TYPE__           <span class="type">__darwin_size_t</span>;        <span class="comment">/* sizeof() */</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">long</span>           <span class="type">__darwin_size_t</span>;        <span class="comment">/* sizeof() */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">这个是 Mac 上对于 <span class="type">size_t</span> 的定义</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="type">int</span> <span class="title">strlongest</span><span class="params">(<span class="type">char</span>* s, <span class="type">char</span>* t)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">strlen</span>(s) - <span class="built_in">strlen</span>(t) &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* s = <span class="string">&quot;abcde&quot;</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* t = <span class="string">&quot;anceafaf&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, <span class="built_in">strlongest</span>(s, t));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">发现定义是无符号数， 但是 如果 s &lt; t 仍然返回 <span class="literal">true</span></span><br><span class="line">  因为无符号数的结果 大于<span class="number">0</span></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最后牢记， size_t 一般情况下这样定义</p>
+<ul>
+<li>32 bit,   size_t &#x3D;&#x3D; unsigned int</li>
+<li>64 bit, size_t &#x3D;&#x3D; unsigned long</li>
+</ul>
+<p>总结：</p>
+<ul>
+<li>避免错误的方式之一， 不使用 无符号数<ul>
+<li>比如 Java 就没有无符号数</li>
+</ul>
+</li>
+<li>系统程序猿 发现 无符号类型可以用来 模运算 和 多精度运算</li>
+</ul>
+<h2 id="2-3-整数运算"><a href="#2-3-整数运算" class="headerlink" title="2.3 整数运算"></a>2.3 整数运算</h2><h3 id="2-3-1-无符号加法"><a href="#2-3-1-无符号加法" class="headerlink" title="2.3.1 无符号加法"></a>2.3.1 无符号加法</h3><p>注意 两个非负数 x, y</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0 &lt;= x, y &lt; 2^w</span><br><span class="line">那么 x + y 的范围在 0 &lt;= x + y &lt;= 2 ^(w + 1) - 2</span><br><span class="line"></span><br><span class="line">说明他们的计算结果需要 w +  1 位来表示</span><br><span class="line">也就是说，如果要保持一个和为 w + 1 位的数字， 并且做加法，我们需要 w + 2 位</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><img src="/csapp_note.assets/image-20211018193539768.png" alt="image-20211018193539768"></p>
+<p>无符号数加法，直接把溢出的部分截断就行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">比如一个四位数字的表示</span><br><span class="line">x = 9, y = 12</span><br><span class="line">[1001] + [1100]  = [10101] 那么丢弃最高位， 就会拿到[0101] </span><br><span class="line">行为和 21 % 16 = 5 一致</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<img src="csapp_note.assets/image-20211018193718736.png" alt="image-20211018193718736" style="zoom:50%;" />
+
+
+
+<p><strong>如何检测无符号数的溢出？</strong></p>
+<ul>
+<li>s &#x3D; x + y, <ul>
+<li>if s &lt; x or s &lt; y 我们就说它溢出了</li>
+</ul>
+</li>
+</ul>
+<img src="csapp_note.assets/image-20211018193832576.png" alt="image-20211018193832576" style="zoom:50%;" />
+
+
+
+
+
+<h3 id="2-3-2-补码加法"><a href="#2-3-2-补码加法" class="headerlink" title="2.3.2 补码加法"></a>2.3.2 补码加法</h3><p>给定范围 <code>-2 ^ (w - 1) &lt;= x &lt;= 2 ^(w - 1) - 1</code>之内的整数，</p>
+<p>和的范围 <code>-2^w &lt;= x + y &lt;= 2 ^w - 2</code></p>
+<p>因此想要准确的表示， 需要 w + 1 位</p>
+<ul>
+<li>因为 比如 2^w w &#x3D; 4 需要 10000 5位来表示</li>
+</ul>
+<p><img src="/csapp_note.assets/image-20211018194953722.png" alt="image-20211018194953722"></p>
+<ul>
+<li>如果 x + y 超过了 TMax, 那么 就会正溢出<ul>
+<li>从和中减去了2^w</li>
+</ul>
+</li>
+<li>如果 x + y 小于 TMin 那么就会负溢出<ul>
+<li>把和 + 2 ^ w</li>
+</ul>
+</li>
+</ul>
+<p><img src="/csapp_note.assets/image-20211018195119275.png" alt="image-20211018195119275"></p>
+<p><img src="/csapp_note.assets/image-20211018195219182.png" alt="image-20211018195219182"></p>
+<p><strong>如何检测 补码加法中的溢出？</strong></p>
+<ul>
+<li>正溢出 当且仅当x &gt; 0, y &gt; 0 但是 s &lt;&#x3D; 0 </li>
+<li>负溢出 当且仅当 x &lt; 0, y &lt; 0, 但是 s &gt;&#x3D;0</li>
+</ul>
+<h3 id="2-3-3-补码的非"><a href="#2-3-3-补码的非" class="headerlink" title="2.3.3 补码的非"></a>2.3.3 补码的非</h3><p><img src="/csapp_note.assets/image-20211018195429056.png" alt="image-20211018195429056"></p>
+<p>对 w 位的补码取非</p>
+<p><img src="/csapp_note.assets/image-20211018195547507.png" alt="image-20211018195547507"></p>
+<h3 id="2-3-4-无符号数的乘法"><a href="#2-3-4-无符号数的乘法" class="headerlink" title="2.3.4 无符号数的乘法"></a>2.3.4 无符号数的乘法</h3><p>范围在<code>0 &lt;= x, y &lt;= 2^w - 1</code> 的整数 x y， 他们的乘积范围</p>
+<p><code>0 &lt;= x * y &lt;= 2^2w -  2^(w + 1) + 1</code> 这需要 2w位表示</p>
+<p>实际上也就是取模了</p>
+<h3 id="2-3-5-补码乘法"><a href="#2-3-5-补码乘法" class="headerlink" title="2.3.5 补码乘法"></a>2.3.5 补码乘法</h3><p>将一个补码数截断 w 位，相当于先计算改值 模2 ^w 位，再把无符号数转换为 补码</p>
+<p><img src="/csapp_note.assets/image-20211018195910032.png" alt="image-20211018195910032"></p>
+<p><img src="/csapp_note.assets/image-20211018195931875.png" alt="image-20211018195931875"></p>
+<p><strong>同时注意 很多程序员不做溢出检查</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span>* result = <span class="built_in">malloc</span>(ele_cnt * ele_size)</span><br><span class="line">  </span><br><span class="line">如果 ele_cnt 很大的话， 那么就会导致 乘法 溢出</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="2-3-6-乘以常数"><a href="#2-3-6-乘以常数" class="headerlink" title="2.3.6 乘以常数"></a>2.3.6 乘以常数</h3><p>在大多数机器上，整数乘法指令很慢， 需要10个或者更多的周期， 但是比如 加法 &#x2F; 减法 位级运算 就只需要 1个时钟周期</p>
+<ul>
+<li>因此编译器会考虑 试着用 移位 + 加法的组合来代替乘法</li>
+</ul>
+<p><strong>当对固定字长左移 k 位的时候， 高 k位被丢弃</strong></p>
+<ul>
+<li>向左移动一个数值等价于执行一个 与2的幂相乘的无符号数乘法</li>
+<li>无论是无符号数运算，还是补码运算，乘以2的幂 都等价于将其移位的结果</li>
+</ul>
+<p>因为乘法比移位和加法的代价大很多，因此需要C编译器试图用移位， 加法和减法的组合消除很多整数乘以常数的情况</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x * <span class="number">14</span></span><br><span class="line">  ==&gt; (x &lt;&lt;<span class="number">3</span>) + (x &lt;&lt; <span class="number">2</span>) + (x &lt;&lt; <span class="number">1</span>)</span><br><span class="line">  ==&gt; (x &lt;&lt; <span class="number">4</span>) - (x &lt;&lt; <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h3 id="2-3-7-除以-2的幂"><a href="#2-3-7-除以-2的幂" class="headerlink" title="2.3.7 除以 2的幂"></a>2.3.7 除以 2的幂</h3><p><strong>无符号和补码数 分别使用逻辑移位和算数移位达到目的</strong></p>
+<p><img src="/csapp_note.assets/image-20211019161859523.png" alt="image-20211019161859523"></p>
+<p>当然，乘法和除法这种移位操作，乘法可以将任何数字进行拆分，但是除法不行</p>
+<h2 id="2-4-浮点数"><a href="#2-4-浮点数" class="headerlink" title="2.4 浮点数"></a>2.4 浮点数</h2><p>浮点数的形式 <code>V = x * 2 ^ y</code></p>
+<ul>
+<li>对涉及特别大的数字</li>
+<li>非常接近0 的数字</li>
+<li>表示起来很友好</li>
+</ul>
+<h3 id="2-4-1-二进制小数"><a href="#2-4-1-二进制小数" class="headerlink" title="2.4.1 二进制小数"></a>2.4.1 二进制小数</h3><p>比如 b1b2…… . bn bn + 1</p>
+<p><img src="/csapp_note.assets/image-20211019162403043.png" alt="image-20211019162403043"></p>
+<img src="csapp_note.assets/image-20211027205324781.png" alt="image-20211027205324781" style="zoom:50%;" />
+
+
+
+
+
+
+
+<p>当然如果我们就是这么表示， 考虑到有限长度的编码，那么十进制不能表示 $\frac{1}{3}$ 这种类型的数字</p>
+<ul>
+<li>只有增加数字才能够提高表示的精度</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">M * <span class="number">2</span> ^ E</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="2-4-2-IEEE-浮点表示"><a href="#2-4-2-IEEE-浮点表示" class="headerlink" title="2.4.2 IEEE 浮点表示"></a>2.4.2 IEEE 浮点表示</h3><p>IEEE 采用 V &#x3D; (-1) ^ s x M x 2 ^E<br>$$<br>(-1) ^ s * M * 2 ^E<br>$$</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">M = 1111 0000 0000 0000 000 0</span><br><span class="line">1111 0000 0000 0000 000 0</span><br><span class="line"></span><br><span class="line">1.1011 * 2 ^ 3</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>符号 sign  s &#x3D; 1 是负数， s &#x3D; 0 是正数</li>
+<li>尾数 significand M 是一个二进制小数</li>
+<li>阶码 E 的作用是对浮点数加权<ul>
+<li>之所以有一个偏移量，是为了保证 exp 编码只需要以无符号数处理</li>
+</ul>
+</li>
+</ul>
+<p><img src="/csapp_note.assets/image-20211019162557509.png" alt="image-20211019162557509"></p>
+<p><img src="/csapp_note.assets/image-20211019162713731.png" alt="image-20211019162713731"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">denormalzie     <span class="number">2</span> ^ <span class="number">-149</span>			<span class="number">2</span>^<span class="number">-126</span>(<span class="number">2</span>^<span class="number">-1</span> + <span class="number">2</span>^<span class="number">-2</span> ... + <span class="number">2</span> ^ <span class="number">-23</span>)</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">normalzie			<span class="number">2</span>^<span class="number">-126</span>							<span class="number">2</span>^ <span class="number">127</span>   <span class="number">2</span>^<span class="number">128</span>)</span><br><span class="line">								lowerbound     upper bound  </span><br><span class="line">  						M = <span class="number">1.0</span></span><br><span class="line">  						E = <span class="number">1</span> - <span class="number">127</span> = <span class="number">-126</span></span><br><span class="line">  </span><br><span class="line">  					E = <span class="number">1111</span> <span class="number">1110</span>  <span class="number">254</span> - <span class="number">127</span> = <span class="number">127</span></span><br><span class="line">  					M = <span class="number">1.111111111</span></span><br><span class="line">  </span><br><span class="line">  M * <span class="number">2</span> ^E</span><br></pre></td></tr></table></figure>
+
+
+<p>$$<br>2 ^ {-126} * M &#x3D; 2 ^ x \<br>M &#x3D; x + 126 \<br>M &#x3D; -130<br>M &#x3D; -4  \<br>2 ^ M \</p>
+<p>X &#x3D; -130 \</p>
+<p>2 ^ {-4}<br>$$</p>
+<p><strong>f 注意是二进制表示 小数</strong></p>
+<p>根据 exp 的值，被编码的值有三种情况</p>
+<ul>
+<li><strong>情况一 规格化的</strong><ul>
+<li>当 exp 的位模式 既不全为0， 也不为1</li>
+<li>E &#x3D; exp - Bias</li>
+<li>M 尾数定义为 1 + f</li>
+</ul>
+</li>
+<li><strong>情况二 非规格化的值</strong><ul>
+<li>当 阶码全为 0  E &#x3D; 1 - Bias</li>
+<li>M &#x3D; f, 没有 1</li>
+</ul>
+</li>
+<li><strong>特殊值</strong><ul>
+<li>当小数域为 0， 得到的值 有两种，或者无穷大，或者 Not a numbers</li>
+</ul>
+</li>
+</ul>
+<p><img src="/csapp_note.assets/image-20211019163927315.png" alt="image-20211019163927315"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">一般的形式是</span><br><span class="line">+/- 1.YYYY * 2 ^ (N - 127)</span><br><span class="line"></span><br><span class="line">Assume X is always 1</span><br><span class="line">1 sign bit</span><br><span class="line">8 bit biased exponent ( N - 127)</span><br><span class="line">23-bit mantissa(YYYYYY)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">举例子比如</span><br><span class="line">101.101 这是二进制表示， 表示为 十进制是 5.625</span><br><span class="line">对于 floating point 需要 normalization</span><br><span class="line">1.01101 * 2 ^ 2</span><br><span class="line"></span><br><span class="line">Sign + -&gt; 0</span><br><span class="line">Exponent = 127 + 2 = 129 = 1000 0001</span><br><span class="line">Mantissa = 1.01101 00 0000 0000 0000 0000 </span><br></pre></td></tr></table></figure>
+
+<p><img src="/csapp_note.assets/image-20211019164301314.png" alt="image-20211019164301314"></p>
+<p><strong>有一些特殊情况需要注意</strong></p>
+<ul>
+<li>0.0 可以表示为 0000000000</li>
+<li>但是我们一开始默认是 1.XXXXXX</li>
+<li>当 Exponent of 0 is denormalizeds</li>
+<li>注意 Floats 不能表示所有的int<ul>
+<li>double 可以表示 所有32位int</li>
+<li>但是 64位的表示不了</li>
+</ul>
+</li>
+</ul>
+<p><img src="/csapp_note.assets/image-20211027210130506.png" alt="image-20211027210130506"></p>
+<h3 id="2-4-6-C-语言中的浮点数"><a href="#2-4-6-C-语言中的浮点数" class="headerlink" title="2.4.6 C 语言中的浮点数"></a>2.4.6 C 语言中的浮点数</h3><p>C 语言提供了两种不同的浮点数据类型</p>
+<ul>
+<li>float</li>
+<li>double</li>
+</ul>
+<p><strong>一些注意</strong></p>
+<ul>
+<li>从 int 转换为 float 数字不会溢出，但是可能被round</li>
+<li>从 int 或者 float 转换为 double ， double 有更大的范围， 更多的精度， 因此不变</li>
+<li>从 double 转换为 float 范围小一些， 可能会变成 正负无穷， 也可能被round 由于精度的问题</li>
+<li>从 float 或者 double 转换为 int 值会round &#x2F; 溢出</li>
+</ul>
+<blockquote>
+<p><strong>舍入</strong></p>
+</blockquote>
+<p>在二进制中，我们会 舍入到最近的偶数</p>
+<p>对于十进制来说</p>
+<ul>
+<li>2.89499  can be rouded as 2.89</li>
+<li>2.8950001 -&gt; 2.90</li>
+<li>2.895000 -&gt; 刚好在一半，那么看保证最后一位是偶数，那么就向上舍入<ul>
+<li>2.90</li>
+</ul>
+</li>
+<li>2.885000 -&gt; 刚好一半，看看怎么样能保证是偶数，那么就向下舍入<ul>
+<li>2.88</li>
+</ul>
+</li>
+</ul>
+<p><strong>对二进制类似</strong></p>
+<table>
+<thead>
+<tr>
+<th>十进制</th>
+<th>二进制</th>
+<th>舍入结果</th>
+<th>十进制</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$2\frac{3}{32}$</td>
+<td>10.00011</td>
+<td>10.00</td>
+<td>2</td>
+<td>不到一半，正常四舍五入</td>
+</tr>
+<tr>
+<td>$2\frac{3}{16}$</td>
+<td>10.00110</td>
+<td>10.01</td>
+<td>$2\frac{1}{4}$</td>
+<td>超过一半，正常四舍五入</td>
+</tr>
+<tr>
+<td>$2\frac{7}{8}$</td>
+<td>10.11100</td>
+<td>11.00</td>
+<td>3</td>
+<td>刚好一半，保证最后一位是偶数，向上</td>
+</tr>
+<tr>
+<td>$2\frac{5}{8}$</td>
+<td>10.10100</td>
+<td>10.10</td>
+<td>$2\frac{1}{2}$</td>
+<td>刚好一半，保证最后一位是偶数，向下</td>
+</tr>
+</tbody></table>
+<p>具体分析为啥， 首先说我们想保留到小数点后两位</p>
+<ul>
+<li>$2\frac{3}{32}$  观察想舍入的是 11， 那么结合前面1位0 发现 011 还没到111的一半，那么就直接抹掉</li>
+<li>$2\frac{3}{16}$  观察想舍入的是110, 结合前面一位 0 因为110超过111一半，那么就直接向上四舍五入</li>
+<li>$2\frac{7}{8}$   观察想舍入的是100， 结合前面一位1， 因为 100 正好一半，那就保证最后一位是偶数<ul>
+<li>如果变成 10.11 最后一位是奇数</li>
+<li>所以只能向上进位 11.00</li>
+</ul>
+</li>
+<li>$2\frac{5}{8}$   观察100， 结合前面一位 0 ， 因为 100正好一半， 那么就保证最后一位是偶数<ul>
+<li>如果变成 10.11 那么最后一位好似奇数</li>
+<li>所以只能</li>
+<li>10.10 向下舍入</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-5-浮点数加法"><a href="#2-5-浮点数加法" class="headerlink" title="2.5 浮点数加法"></a>2.5 浮点数加法</h2><p>$$<br>(-1) ^ {s_1} M_12^{E_1} + (-1)^{s_2}M_22^{E_2} &#x3D; (-1)^sM2^E<br>$$<br>其中注意</p>
+<ul>
+<li>假设 E1 &gt; E2, 那么 s &#x3D; s1 ^s2, M &#x3D; M1 + M2, E &#x3D; E1<ul>
+<li>如果 M 大于等于2， 把 M 右移动， 并增加 E的值</li>
+<li>如果 M 小于1， 把 M 左移动k位， E减少k</li>
+<li>如果E超出了范围，那么就溢出</li>
+<li>把M舍入到frac的精度</li>
+</ul>
+</li>
+</ul>
+<p><strong>基本性质</strong></p>
+<ul>
+<li>除了 inf 和 Nan 每个数字都有对应的倒数</li>
+<li>不满足结合律，因为舍入会造成精度损失<ul>
+<li>(3.14+1e10)-1e10 &#x3D; 0</li>
+</ul>
+</li>
+</ul>
+<img src="csapp_note.assets/image-20211028160913179.png" alt="image-20211028160913179" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 id="2-6-总结"><a href="#2-6-总结" class="headerlink" title="2.6 总结"></a>2.6 总结</h2><ul>
+<li><p>在相同长度的无符号数和有符号数之间进行强制转换， C语言实现遵循的底层原理是位模式不变</p>
+<ul>
+<li>但是会有无法预料的问题</li>
+</ul>
+</li>
+<li><p><code>~x + 1 == -x</code></p>
+</li>
+</ul>
+<h1 id="3-Machine-Level-Representation-of-Programs"><a href="#3-Machine-Level-Representation-of-Programs" class="headerlink" title="3 Machine-Level Representation of Programs"></a>3 Machine-Level Representation of Programs</h1><p>既然 complier 能帮助我们将 code 转换为 low-level language 我们为什么还要学习呢？</p>
+<ul>
+<li>By invoking the compliler with appropriate command-line parameters<ul>
+<li>the compiler will generate a file showing its output in assembly-code form</li>
+</ul>
+</li>
+<li>By reading the code, we can understand the optimization capabilities of the compiler and analyze the underlying inefficiencies in the codde</li>
+</ul>
+<p>The need for programmers to learn machine code has <strong>shifted</strong> to one being read and understand the code generated by compilers</p>
+<p>读汇编的过程实际上是一个 a form of reverse engineering –&gt; </p>
+<ul>
+<li>try to understand the process by which the system was created by studying the system and working backward</li>
+</ul>
+<p>项目的展示基于 X86-64</p>
+<ul>
+<li>A 32-bit machine can only mae use of around 4 gigabytes(2^32) bit machines of random access memory</li>
+</ul>
+<h2 id="3-1-A-historaical-Perspecticve"><a href="#3-1-A-historaical-Perspecticve" class="headerlink" title="3.1 A historaical Perspecticve"></a>3.1 A historaical Perspecticve</h2><p>bullshit just skip it</p>
+<h2 id="3-2-Program-Encodings"><a href="#3-2-Program-Encodings" class="headerlink" title="3.2 Program Encodings"></a>3.2 Program Encodings</h2><p>当我们写完 c program 我们可以compile通过</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">linux&gt; </span><span class="language-bash">gcc -Og -o p p1.c p2.c</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>-Og means the compliler to apply a level of optimization that yields machine code that follows the overall structure of the original C code</p>
+</li>
+<li><p>当然优化程度越高， C代码和汇编的差距越大，因此采用不那么大的 -Og 来进行学习</p>
+</li>
+</ul>
+<h3 id="3-2-1-Machine-Level-Code"><a href="#3-2-1-Machine-Level-Code" class="headerlink" title="3.2.1 Machine-Level Code"></a>3.2.1 Machine-Level Code</h3><p>计算机系统有两种重要的抽象</p>
+<blockquote>
+<p><strong>第一种 指令集</strong></p>
+</blockquote>
+<ul>
+<li>The format and bahavior of a machine-level program is defined by the instruction set architecutre, or <strong>ISA</strong><ul>
+<li>描述了 处理器状态</li>
+<li>指令的格式</li>
+<li>每条指令执行之后的 status</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>第二种 Virtual Memory</strong></p>
+</blockquote>
+<p><strong>一些在 C 代码中隐藏的细节，可以在 汇编代码中看到</strong></p>
+<ul>
+<li>The program counter, 在 x86-64 中被叫做 %rip</li>
+<li>integer registee file<ul>
+<li>可以存储 地址 &#x2F; 指针</li>
+<li>integer data</li>
+<li>存储某些程序重要状态</li>
+</ul>
+</li>
+<li>Condition Code Registers<ul>
+<li>实现对于不同指令状态的记录， 比如跳转啥的</li>
+</ul>
+</li>
+<li>A set of vector registers 存储 interger &#x2F; floating point</li>
+</ul>
+<h3 id="3-2-2-Code-Examples"><a href="#3-2-2-Code-Examples" class="headerlink" title="3.2.2 Code Examples"></a>3.2.2 Code Examples</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">linux&gt; </span><span class="language-bash">gcc -OG -S mstore.c</span></span><br><span class="line"></span><br><span class="line">-S 表明告诉编译器 to generate assembly file and go no further</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">long</span> <span class="title">mult2</span><span class="params">(<span class="type">long</span>, <span class="type">long</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">multstore</span><span class="params">(<span class="type">long</span> x, <span class="type">long</span> y, <span class="type">long</span>* dest)</span></span>&#123;</span><br><span class="line">  <span class="type">long</span> t = <span class="built_in">mult2</span>(x, y);</span><br><span class="line">  *dest = t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>assembly:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mulstore:</span><br><span class="line">	pushq %rbx			//将rbx中内容 push 到 program stack</span><br><span class="line">	movq %rdx, %rbx</span><br><span class="line">	call mult2</span><br><span class="line">	moveq %rax, (%rbx)</span><br><span class="line">	popq %rbx</span><br><span class="line">	ret</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>如果我们选择了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">linux&gt; </span><span class="language-bash">gcc -Og -c mstore.c</span></span><br></pre></td></tr></table></figure>
+
+<p>这样会generate an object-codee file mstore.o</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">类似</span><br><span class="line">53 48 86 d3 e8 00 00 00 00 48 5b c3</span><br></pre></td></tr></table></figure>
+
+<p>计算机就是这样执行的</p>
+<p>想知道 binary code 代表什么意思，可以使用 disassemblers</p>
+<p>linux 系统中有 OBJDUMP 可以 实现</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">linux&gt; </span><span class="language-bash">objdump -d mstore.o</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/csapp_note.assets/image-20211019182716166.png" alt="image-20211019182716166"></p>
+<p><strong>对于机器表示的一些内容</strong></p>
+<ul>
+<li>X86-64 指令集 每条指令 1-15个 bytes<ul>
+<li>一般来说 操作数越多，指令bytes越多</li>
+</ul>
+</li>
+<li>每个指令都是 prefix-free, 类似霍夫曼coding<ul>
+<li>from a given starting position, there is a unique decoding of the bytes into machine instructions</li>
+<li>比如 只有 <code>pushq %rbx</code> can start with byte value 53</li>
+</ul>
+</li>
+</ul>
+<p><img src="/csapp_note.assets/image-20211019183215880.png" alt="image-20211019183215880"></p>
+<h3 id="3-2-3-Notes-on-Formatting"><a href="#3-2-3-Notes-on-Formatting" class="headerlink" title="3.2.3 Notes on Formatting"></a>3.2.3 Notes on Formatting</h3><p>一般我们采用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">linux&gt; </span><span class="language-bash">gcc -Og -S mstore.c</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/csapp_note.assets/image-20211019183345922.png" alt="image-20211019183345922"></p>
+<h2 id="3-3-Data-Formats"><a href="#3-3-Data-Formats" class="headerlink" title="3.3 Data Formats"></a>3.3 Data Formats</h2><p>由于历史设计的原因</p>
+<p>Intel uses “word” to descript 16-bit data type</p>
+<ul>
+<li><p>32-bit 被叫做 double word</p>
+</li>
+<li><p>64 bit quad words</p>
+</li>
+<li><p>X86家族中 Microprocessors 实现了 all floating-point operations with a special 80-bit floating-point format</p>
+</li>
+<li><p>大多数的 assembly-code 通过后缀表明到底操作的是 什么 word</p>
+<ul>
+<li>movb (move byte)</li>
+<li>movw(move word)</li>
+<li>movl(move double word)</li>
+<li>movq(move quad word)</li>
+</ul>
+</li>
+</ul>
+<p>l 在后缀中是 double</p>
+<h2 id="3-4-Accessing-Information"><a href="#3-4-Accessing-Information" class="headerlink" title="3.4 Accessing Information"></a>3.4 Accessing Information</h2><p>X86-64 CPU 包含了 16个 64位 寄存器</p>
+<ul>
+<li>used to store integer data as well as pointer</li>
+</ul>
+<blockquote>
+<p><strong>Instructions can operate on data of different size stored in the low-order bytes of the 16 registers</strong></p>
+</blockquote>
+<ul>
+<li>Byte-level operations can access the least significant byte</li>
+<li>16-bit operations can access the least significant 2 bytes</li>
+<li>32-bit operations can access the least significant 4 bytes</li>
+<li>64-bit operations can access the whole register</li>
+</ul>
+<img src="csapp_note.assets/image-20211019185013695.png" alt="image-20211019185013695" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="3-4-1-Operand-Specifiers"><a href="#3-4-1-Operand-Specifiers" class="headerlink" title="3.4.1 Operand Specifiers"></a>3.4.1 Operand Specifiers</h3><img src="csapp_note.assets/image-20211019185207461.png" alt="image-20211019185207461" style="zoom:50%;" />
+
+
+
+<p>指令中几种不同的操作数</p>
+<ul>
+<li>immediate -&gt; constant values $577</li>
+<li>register –&gt; $5</li>
+<li>memory reference<ul>
+<li>因为我们认为内存是一个巨大的数组</li>
+<li>我们采用数组形式access<ul>
+<li>Mb[Addr] 表示 a reference to the b-byte value store in memory starting at address Addr</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>为啥要有这么复杂的 内存reference格式？</p>
+<ul>
+<li>they are useful when referencing array and structure elements</li>
+</ul>
+<h3 id="3-4-2-Data-Movement-Instructions"><a href="#3-4-2-Data-Movement-Instructions" class="headerlink" title="3.4.2 Data Movement Instructions"></a>3.4.2 Data Movement Instructions</h3><blockquote>
+<p><strong>Move class, 最简单的形式， 就是从一个地方拷贝到另外一个地方</strong></p>
+</blockquote>
+<img src="csapp_note.assets/image-20211019185918917.png" alt="image-20211019185918917" style="zoom:50%;" />
+
+
+
+<p><img src="/csapp_note.assets/image-20211019190043251.png" alt="image-20211019190043251"></p>
+<p><img src="/csapp_note.assets/image-20211019190153060.png" alt="image-20211019190153060"></p>
+<p>注意这个图片， 如果 move bytes 那么只动后面两个</p>
+<img src="csapp_note.assets/image-20211019190341757.png" alt="image-20211019190341757" style="zoom:50%;" />
+
+
+
+<blockquote>
+<p><strong>MOVZ class 会将dest 的剩余数字全部填充为 0</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>MOVS class 会将剩下的数字填充 based on sign extension</strong></p>
+</blockquote>
+<p><img src="/csapp_note.assets/image-20211019190647726.png" alt="image-20211019190647726"></p>
+<h3 id="3-4-3-Data-Movement-Example"><a href="#3-4-3-Data-Movement-Example" class="headerlink" title="3.4.3 Data Movement Example"></a>3.4.3 Data Movement Example</h3><blockquote>
+<p><strong>C code</strong></p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">long</span> <span class="title">exchange</span><span class="params">(<span class="type">long</span>* xp, <span class="type">long</span> y)</span></span>&#123;</span><br><span class="line">  <span class="type">long</span> x = *xp;</span><br><span class="line">  *xp = y;</span><br><span class="line">  <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>Assembly Code</strong></p>
+</blockquote>
+<img src="csapp_note.assets/image-20211019190904576.png" alt="image-20211019190904576" style="zoom:50%;" />
+
+
+
+
+
+<p><strong>对上述 code 进行两点剖析</strong></p>
+<ul>
+<li>在 C中的pointer 实际上 deferencing a pointer involves <ul>
+<li>Copying that pointer into a register</li>
+<li>use this register in a memory reference</li>
+</ul>
+</li>
+<li>local variables such as X are often kept in registers rathre than stored in memory locations<ul>
+<li>因为 Register Access 通常比 Memory Locations 快很多</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-4-4-Pushing-and-Poping-Data"><a href="#3-4-4-Pushing-and-Poping-Data" class="headerlink" title="3.4.4  Pushing and Poping Data"></a>3.4.4  Pushing and Poping Data</h3><blockquote>
+<p><strong>The stack plays a vital role in the handling of procedure calls</strong></p>
+</blockquote>
+<img src="csapp_note.assets/image-20211019191334041.png" alt="image-20211019191334041" style="zoom:50%;" />
+
+
+
+<img src="csapp_note.assets/image-20211019191425649.png" alt="image-20211019191425649" style="zoom:50%;" />
+
+
+
+<p>注意</p>
+<ul>
+<li>pushing involves decrementing the stack pointer<ul>
+<li>实际上分两步， 第一步 decrementing the stack pointer by 8</li>
+<li>then writing the value at the new top of tack address</li>
+</ul>
+</li>
+<li>poping involves reading from memory and incrementing the stack pointer</li>
+</ul>
+<blockquote>
+<p><strong>pushq % rbp 和 下面两步相同</strong></p>
+</blockquote>
+<img src="csapp_note.assets/image-20211019191650525.png" alt="image-20211019191650525" style="zoom:50%;" />
+
+
+
+
+
+<blockquote>
+<p><strong>popq %rax 和下面两步相同</strong></p>
+</blockquote>
+<img src="csapp_note.assets/image-20211019191717346.png" alt="image-20211019191717346" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 id="3-5-Arithmetic-and-Logical-Operations"><a href="#3-5-Arithmetic-and-Logical-Operations" class="headerlink" title="3.5 Arithmetic and Logical Operations"></a>3.5 Arithmetic and Logical Operations</h2><p>蛮多汇编指令有 variant 在 word size 比如</p>
+<ul>
+<li><p>addb</p>
+</li>
+<li><p>addw</p>
+</li>
+<li><p>addl</p>
+</li>
+<li><p>addq</p>
+</li>
+</ul>
+<img src="csapp_note.assets/image-20211026190031541.png" alt="image-20211026190031541" style="zoom:50%;" />
+
+
+
+
+
+<h3 id="3-5-1-Load-指令"><a href="#3-5-1-Load-指令" class="headerlink" title="3.5.1 Load 指令"></a>3.5.1 Load 指令</h3><p><strong>当然 load 指令也有一些用处 当实施简单的加减法</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">long</span> <span class="title">scale</span><span class="params">(<span class="type">long</span> x, <span class="type">long</span> y, <span class="type">long</span> z)</span></span>&#123;</span><br><span class="line">  <span class="type">long</span> t = x + <span class="number">4</span> * y + <span class="number">12</span> * z;</span><br><span class="line">  <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="csapp_note.assets/image-20211026190253407.png" alt="image-20211026190253407" style="zoom:50%;" />
+
+
+
+
+
+
+
+<h3 id="3-5-2-Unary-and-Binary-Operations"><a href="#3-5-2-Unary-and-Binary-Operations" class="headerlink" title="3.5.2 Unary and Binary Operations"></a>3.5.2 Unary and Binary Operations</h3><p>第二组指令是 只有一个操作数 的 指令</p>
+<ul>
+<li>This  operand can be either a register or a memory location</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">incq(%</span><span class="language-bash">rsp) //这条指令让 stack 顶的元素 + 1</span></span><br></pre></td></tr></table></figure>
+
+<p>类似 x++, y–</p>
+<p>第三组指令是</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subq %rax, %rdx</span><br><span class="line">实际上的作用是 %rdx - %rax</span><br><span class="line">英文语义是 subtract %rax from %rdx</span><br></pre></td></tr></table></figure>
+
+
+
+<p>同时对于 MOV 指令来说， 两个 oprand 不能同时是 memory location</p>
+<ul>
+<li>如果 destination 是 memory 那么 <ul>
+<li>processor must read the value from the memory, perform the operation, and then write the result back to the memory</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-5-3-Shift-Operations"><a href="#3-5-3-Shift-Operations" class="headerlink" title="3.5.3 Shift Operations"></a>3.5.3 Shift Operations</h3><img src="csapp_note.assets/image-20211026191034818.png" alt="image-20211026191034818" style="zoom:50%;" />
+
+
+
+
+
+<p>这个就是对应的优化</p>
+<h2 id="3-6-Control"><a href="#3-6-Control" class="headerlink" title="3.6 Control"></a>3.6 Control</h2><p>对于代码执行流程的控制</p>
+<p>Machine code provides two basic low-level mechanisms for implementing contional behavior</p>
+<ul>
+<li>it tests the data valeus and<ul>
+<li>either alters the control flow</li>
+<li>or the data flow based on the results of these tests</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-6-1-Condition-Codes"><a href="#3-6-1-Condition-Codes" class="headerlink" title="3.6.1 Condition Codes"></a>3.6.1 Condition Codes</h3><p>CPU 维护了一系列  single-bit condiiton code registers describing attributes of the most recent arithmetic or logical operations</p>
+<ul>
+<li>CF: Carry Flag. The most recent  operation generated a carry out of the most significant bit<ul>
+<li>主要用来 检测 overflow for unsigned operations</li>
+</ul>
+</li>
+<li>ZF: Zero Flag, The most recent opeartion yielded zero</li>
+<li>SF: Sign Flag. The most recent operation yielded a negative value</li>
+<li>OF: Overflow flag. The most recent operation caused a two’s complement overflow</li>
+</ul>
+<p>比如说 我们有这个计算 t &#x3D; a + b</p>
+<p>那么这些寄存器会这样计算</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CF (unsigned) t &lt; (unsigned) a			Unsigned Overflow</span><br><span class="line">ZF (t == 0)												Zero</span><br><span class="line">SF (t &lt; 0)													Negative</span><br><span class="line">OF (a &lt; 0 == b &lt; 0) &amp;&amp; (t &lt; 0 != a &lt; 0) Sign Overflow</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="csapp_note.assets/image-20211026192016123.png" alt="image-20211026192016123" style="zoom:50%;" />
+
+
+
+
+
+
+
+<h3 id="3-6-3-Jump-Instructions"><a href="#3-6-3-Jump-Instructions" class="headerlink" title="3.6.3 Jump Instructions"></a>3.6.3 Jump Instructions</h3><ul>
+<li>跳转指令通常被翻译为 一个 label ，跳到这个 label 这里</li>
+</ul>
+<p>C 语言中的 if-else 语句</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(test-expr)</span><br><span class="line">  then-statement</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  <span class="keyword">else</span>-statement</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>汇编会将其转换为如下的形式</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">t  = text-expr</span><br><span class="line"><span class="keyword">if</span>(!t)</span><br><span class="line">	<span class="keyword">goto</span> <span class="literal">false</span>;</span><br><span class="line">then-statement</span><br><span class="line">	<span class="keyword">goto</span> done;</span><br><span class="line"><span class="literal">false</span>:</span><br><span class="line">	<span class="keyword">else</span>-statement</span><br><span class="line">done:</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h3 id="3-6-6-用条件传送来实现条件分支"><a href="#3-6-6-用条件传送来实现条件分支" class="headerlink" title="3.6.6 用条件传送来实现条件分支"></a>3.6.6 用条件传送来实现条件分支</h3><p>实现条件的操作 传统来说是通过控制的方式</p>
+<ul>
+<li>如果正确，就走一条路</li>
+<li>反之，就是另外一条路</li>
+</ul>
+<p>一种可以替代的策略是 使用数据的条件转移</p>
+<ul>
+<li>实际上就是两种我都算出来，是哪个就拿哪个作为结果</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">long</span> <span class="title">absdiff</span><span class="params">(<span class="type">long</span> x, <span class="type">long</span> y)</span></span>&#123;</span><br><span class="line">  <span class="type">long</span> result;</span><br><span class="line">  <span class="keyword">if</span>(x &lt; y)</span><br><span class="line">    result = y - x;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  	result = x - y;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">会被翻译为</span><br><span class="line"><span class="type">long</span> <span class="built_in">cmovdiff</span>(<span class="type">long</span> x, <span class="type">long</span> y)&#123;</span><br><span class="line">  <span class="type">long</span> rval = y - x;</span><br><span class="line">  <span class="type">long</span> eval = x - y;</span><br><span class="line">  <span class="type">long</span> ntest = x &gt;= y;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span>(ntest)	rval = eval;</span><br><span class="line">  <span class="keyword">return</span> rval;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>之所以 使用数据的条件转移性能比较好，主要是因为 可以避免对于 处理器错误的惩罚</p>
+<ul>
+<li>现在处理器采用非常精密的分支预测逻辑来猜测每条指令是否会执行</li>
+<li>如果预测失败， 就会要求处理器丢掉它为该跳转指令后所有指令已做的工作，然后再从正确的位置开始去填充流水线</li>
+</ul>
+<h3 id="3-6-8-Switch-语句"><a href="#3-6-8-Switch-语句" class="headerlink" title="3.6.8 Switch 语句"></a>3.6.8 Switch 语句</h3><p>可以根据一个整数的索引值 进行多重分支预测</p>
+<ul>
+<li>使用跳转表 jump table 使得实现更加高效</li>
+</ul>
+<img src="csapp_note.assets/image-20211026200140927.png" alt="image-20211026200140927" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+<h2 id="3-7-过程"><a href="#3-7-过程" class="headerlink" title="3.7 过程"></a>3.7 过程</h2><p>Producure 是一种很重要的抽象，提供了一种封装代码的方式</p>
+<ul>
+<li>用一组制定的参数和一个可选的返回值实现了某种功能</li>
+<li>不同的编程语言中，过程的形式多种多样<ul>
+<li>函数 function</li>
+<li>方法 Method</li>
+<li>Subroutine</li>
+<li>初恋书 Handler</li>
+</ul>
+</li>
+</ul>
+<p><strong>当然要提供对于过程的支持，需要有以下内容 （假设P call Q, Q return back to P</strong></p>
+<ul>
+<li>传递控制: 进入过程Q 之前， 程序计数器 必须被设置为 Q的代码的起始地址，然后在返回的时候，把程序计数器设置为P中调用Q后面的地址</li>
+<li>传递数据:P必须能够向Q提供一个或者多个参数， Q必须能够向P 返回一个值</li>
+<li>分配和释放内存: 在开始时，Q可能需要为局部变量分配空间，在返回前，又必须释放这些存储空间</li>
+</ul>
+<h3 id="3-7-1-运行时栈的情况"><a href="#3-7-1-运行时栈的情况" class="headerlink" title="3.7.1 运行时栈的情况"></a>3.7.1 运行时栈的情况</h3><ul>
+<li>当 x86-64 过程需要的存储空间超过寄存器能够存放的大小时， 就会在栈上分配空间<ul>
+<li>这个过程被称为 过程 Stack Frame</li>
+</ul>
+</li>
+<li>当然如果需要存储的参数不多，那么直接在 寄存器上分配</li>
+</ul>
+<img src="csapp_note.assets/image-20211030190925758.png" alt="image-20211030190925758" style="zoom:50%;" />
+
+
+
+
+
+<img src="csapp_note.assets/image-20211030191055736.png" alt="image-20211030191055736" style="zoom:50%;" />
+
+
+
+
+
+
+
+<h3 id="3-7-4-栈上的局部存储"><a href="#3-7-4-栈上的局部存储" class="headerlink" title="3.7.4 栈上的局部存储"></a>3.7.4 栈上的局部存储</h3><p>&#x3D;&#x3D;常见的情况 局部数据需要存放在内存中&#x3D;&#x3D;</p>
+<ul>
+<li>寄存器不足够存放所有的本地数据</li>
+<li>对一个局部变量使用地址运算符 &amp;， 因此必须能够为它产生一个地址</li>
+<li>某些局部变量是数组或者结构， 因此必须通过数组 &#x2F; 结构的引用实现访问</li>
+</ul>
+<p>一般来说，过程通过减少栈指针在栈上分配空间， 分配的结果作为Stack Frame 的一部分</p>
+<p><img src="/csapp_note.assets/image-20211030191757738.png" alt="image-20211030191757738"></p>
+<p>注意这里 为 swap_add 作准备， %rsp 或者栈指针 被减去16， 用来存放两个指针的内容</p>
+<p><strong>我们可以再次分析一个案例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="title function_">call_proc</span><span class="params">()</span>&#123;</span><br><span class="line">  <span class="type">long</span> x1 = <span class="number">1</span>;  <span class="type">int</span> x2 = <span class="number">2</span>;</span><br><span class="line">  <span class="type">short</span> x3 = <span class="number">3</span>; <span class="type">char</span> x4 = <span class="number">4</span>;</span><br><span class="line">  proc(x1, &amp;x1, x2, &amp;x2, x3, &amp;x3, x4, &amp;x4);</span><br><span class="line">  <span class="keyword">return</span> (x1 + x2) * (x3 - x4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="csapp_note.assets/image-20211030192318810.png" alt="image-20211030192318810" style="zoom:50%;" />
+
+
+
+<ul>
+<li>将四个指针的值，按照sizeof 的大小进行分配</li>
+</ul>
+<img src="csapp_note.assets/image-20211030192536608.png" alt="image-20211030192536608" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+<h2 id="3-8-数组分配和访问"><a href="#3-8-数组分配和访问" class="headerlink" title="3.8 数组分配和访问"></a>3.8 数组分配和访问</h2><p>C 语言允许对指针进行运算， 而计算出的值会根据该指针引用的数据类型的大小进行伸缩</p>
+<ul>
+<li>如果 指针类型T， P 指向这个数组<ul>
+<li>$p + i &#x3D; x_p + L * i$, 这里 L 是元素的大小</li>
+</ul>
+</li>
+</ul>
+<p>历史上来说， C 语言只支持大小在编译时确定的多维数组， </p>
+<ul>
+<li>程序员如果需要变长数组的时候， 就需要 malloc 或者 calloc</li>
+</ul>
+<p>C99 引入了一种功能， 可以允许数组的维度是表达式，在数组被分配的时候才会计算</p>
+<ul>
+<li>int A[expr] [expr2]</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">可以写成</span><br><span class="line">  <span class="function"><span class="type">int</span> <span class="title">val</span><span class="params">(<span class="type">long</span> n, <span class="type">int</span> A[n][n], <span class="type">long</span> i, <span class="type">long</span> j)</span></span>&#123;</span><br><span class="line">	  <span class="keyword">return</span> A[i][j];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;这里注意 n 必须在A[n] [n]之前，这样函数遇到这个数组的时候，就可以知道数组的维度&#x3D;&#x3D;</p>
+<h2 id="3-9-异质的数据结构"><a href="#3-9-异质的数据结构" class="headerlink" title="3.9 异质的数据结构"></a>3.9 异质的数据结构</h2><p>C 语言中提供了两种将不同类型的对象组合到一起创建数据类型的机构</p>
+<ul>
+<li>结构 structure 使用 struct 声明<ul>
+<li>允许多个对象集合在一个单位中</li>
+</ul>
+</li>
+<li>union 使用 union <ul>
+<li>允许不同类型来引用一个对象</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-9-1-结构"><a href="#3-9-1-结构" class="headerlink" title="3.9.1 结构"></a>3.9.1 结构</h3><ul>
+<li>类似数组， 将可能不同类型的对象聚集在一个连续的内存区域内</li>
+<li>结构的所有组成部分都存放在内存中一段连续的空间</li>
+<li>指向结构的指针就是结构第一个字节的地址</li>
+</ul>
+<p>看个例子</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">rec</span>&#123;</span><br><span class="line">  <span class="type">int</span> i;</span><br><span class="line">  <span class="type">int</span> j;</span><br><span class="line">  <span class="type">int</span> a[<span class="number">2</span>];</span><br><span class="line">  <span class="type">int</span> *p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/csapp_note.assets/image-20211030193742098.png" alt="image-20211030193742098"></p>
+<h3 id="3-9-2-Union"><a href="#3-9-2-Union" class="headerlink" title="3.9.2 Union"></a>3.9.2 Union</h3><ul>
+<li>Union 提供了一种方式，能够规避 C 语言的类型系统</li>
+<li>允许以多个类型来引用同一个对象</li>
+</ul>
+<p>比如如下代码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">S3</span>&#123;</span><br><span class="line">  <span class="type">char</span> c;</span><br><span class="line">  <span class="type">int</span> i[<span class="number">2</span>];</span><br><span class="line">  <span class="type">double</span> v;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">union</span> <span class="title class_">U3</span>&#123;</span><br><span class="line">  <span class="type">char</span> c;</span><br><span class="line">  <span class="type">int</span> i[<span class="number">2</span>];</span><br><span class="line">  <span class="type">double</span> v;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><img src="/csapp_note.assets/image-20211030193914042.png" alt="image-20211030193914042"></p>
+<ul>
+<li>一个联合的总的大小等于 它最大字段的大小</li>
+</ul>
+<blockquote>
+<p> <strong>我们为啥要用 Union</strong></p>
+</blockquote>
+<ul>
+<li>When we know in davance that the use of thwo different fields in a data strcuture will be mutually exclusive</li>
+<li>Then declaring these thwo fields as part of a union rather than a strcuture will reduce the total space allocated</li>
+</ul>
+<p>比如我们想实现一个 二叉树的结构</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">node_s</span>&#123;</span><br><span class="line">		<span class="keyword">struct</span> <span class="title class_">node_s</span>* left;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">node_s</span>* right;</span><br><span class="line">  	</span><br><span class="line">	  <span class="type">double</span> data[<span class="number">2</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>如果采用 structu 那么 每个结构需要 32个字节， 但如果 没有数据的话，就会浪费 一半的字节</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">node_u</span>&#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> <span class="title">node_u</span>* <span class="title">left</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> <span class="title">node_u</span>* <span class="title">right</span>;</span></span><br><span class="line">  &#125;internal;</span><br><span class="line">  </span><br><span class="line">  <span class="type">double</span> data[<span class="number">2</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样的话，每个节点就需要16个字节</p>
+<ul>
+<li>如果n是一个指针， 指向 union node_u* 类型</li>
+</ul>
+<p>我们就可以使用</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">n-&gt;data[<span class="number">0</span>], n-&gt;data[<span class="number">1</span>] <span class="comment">// 引用叶子节点数据</span></span><br><span class="line">  n-&gt;internal.left</span><br><span class="line">  n-&gt;internal.right</span><br><span class="line">  来具体引用内部节点</span><br></pre></td></tr></table></figure>
+
+
+
+<p>但是这样的话就没有办法判断给定的节点是不是叶子结点， 还是内部节点， 我们可以使用 枚举类型</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span>N_LEAF, N_INTERNAL&#125; <span class="type">nodetype_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">node_u</span>&#123;</span></span><br><span class="line">  <span class="type">nodetype_t</span> type;</span><br><span class="line">  <span class="class"><span class="keyword">union</span>&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">      <span class="class"><span class="keyword">union</span> <span class="title">node_u</span>* <span class="title">left</span>;</span></span><br><span class="line">	    <span class="class"><span class="keyword">union</span> <span class="title">node_u</span>* <span class="title">right</span>;</span>    </span><br><span class="line">    &#125;internal;</span><br><span class="line">		<span class="type">double</span> data[<span class="number">2</span>];</span><br><span class="line">  &#125;info;</span><br><span class="line">  </span><br><span class="line">  <span class="type">double</span> data[<span class="number">2</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这个结构总共需要 24 个字节</li>
+<li>type 是 4字节</li>
+<li>info.internal.left + info.internal.right  或者 double data[2] 各需要16字节</li>
+</ul>
+<p>那么总结 4 + 16 + 4pading &#x3D; 24</p>
+<h3 id="3-9-3-数据对齐"><a href="#3-9-3-数据对齐" class="headerlink" title="3.9.3 数据对齐"></a>3.9.3 数据对齐</h3><ul>
+<li>要求某种类型对象的地址必须是某个值 K 的倍数</li>
+<li>如果处理器需要从内存中取8 个字节， 那么地址必须是 8的倍数</li>
+</ul>
+<p><img src="/csapp_note.assets/image-20211030195013917.png" alt="image-20211030195013917"></p>
+<img src="csapp_note.assets/image-20211030195035818.png" alt="image-20211030195035818" style="zoom:25%;" />
+
+
+
+
+
+
+
+<h2 id="3-10-在机器级程序中将控制与数据结构起来"><a href="#3-10-在机器级程序中将控制与数据结构起来" class="headerlink" title="3.10 在机器级程序中将控制与数据结构起来"></a>3.10 在机器级程序中将控制与数据结构起来</h2><p>指针可以用来指向函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> p)</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> (*fp)(<span class="type">int</span> ,<span class="type">int</span> *);</span><br><span class="line">fp = fun;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> y = <span class="number">1</span>;</span><br><span class="line"><span class="type">int</span> result = fp(<span class="number">3</span>, &amp;y);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/csapp_note.assets/image-20211030195427038.png" alt="image-20211030195427038"></p>
+<p><img src="/csapp_note.assets/image-20211031151715192.png" alt="image-20211031151715192"></p>
+<p><img src="/csapp_note.assets/image-20211031151934921.png" alt="image-20211031151934921"></p>
+<p><img src="/csapp_note.assets/image-20211031151952727.png" alt="image-20211031151952727"></p>
+<p><img src="/csapp_note.assets/image-20211031152028629.png" alt="image-20211031152028629"></p>
+<h2 id="3-总结-查漏补缺"><a href="#3-总结-查漏补缺" class="headerlink" title="3.总结 + 查漏补缺"></a>3.总结 + 查漏补缺</h2><p>字节按照具体含义进行翻译， 就成了人类可以阅读的汇编代码</p>
+<ul>
+<li>可以认为汇编代码就是机器代码的可以读形式</li>
+</ul>
+<h1 id="5-程序性能优化"><a href="#5-程序性能优化" class="headerlink" title="5 程序性能优化"></a>5 程序性能优化</h1><p><strong>How to write an efficient Program</strong></p>
+<ul>
+<li>Select appropriate algorithms and data structures<ul>
+<li>合适的数据结构和算法</li>
+</ul>
+</li>
+<li>Capabilities and Limitations of Optimizing Compilers<ul>
+<li>编译器的能力和局限性</li>
+</ul>
+</li>
+<li>Exploiting Paralleism<ul>
+<li>探索并行化</li>
+</ul>
+</li>
+</ul>
+<h2 id="5-1-编译器无法做的一些优化"><a href="#5-1-编译器无法做的一些优化" class="headerlink" title="5.1 编译器无法做的一些优化"></a>5.1 编译器无法做的一些优化</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">add1</span><span class="params">(<span class="type">long</span> *xp, <span class="type">long</span> *yp)</span></span>&#123;</span><br><span class="line">  *xp += *yp;</span><br><span class="line">  *xp += *yp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add2</span><span class="params">(<span class="type">long</span> *xp, <span class="type">long</span> *yp)</span></span>&#123;</span><br><span class="line">  *xp += <span class="number">2</span> * *yp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">虽然 add1 需要 <span class="number">6</span> 次引用内存， <span class="number">2</span>次读xp <span class="number">2</span>次读 yp <span class="number">2</span>次写xp</span><br><span class="line">    add2 需要 <span class="number">3</span> 次引用内存， <span class="number">1</span>次读xp <span class="number">1</span>次读 yp <span class="number">1</span>次写xp</span><br><span class="line">  效率add2 高</span><br><span class="line">看起来两个程序完成功能一致，但是如果 xp 和 yp 指向同一内存位置， 结果就会不一样</span><br><span class="line">  	xp 一个变成<span class="number">4</span>倍 一个变成<span class="number">3</span>倍</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"> 所以这种情况下，编译器无法进行优化</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> counter = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">int</span>  <span class="title">fun</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> counter++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">func1</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">fun</span>() + <span class="built_in">fun</span>() + <span class="built_in">fun</span>() + <span class="built_in">fun</span>();</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 0 + 1 + 2 + 3;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">func2</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">4</span> * <span class="built_in">func</span>();</span><br><span class="line">	<span class="comment">//4 * 0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">所以这种情况也不能进行优化</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="5-2-如何表示程序性能"><a href="#5-2-如何表示程序性能" class="headerlink" title="5.2 如何表示程序性能"></a>5.2 如何表示程序性能</h2><p>比如计算前缀和</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">For a vector a = [a0, a1, a2....an<span class="number">-1</span>]</span><br><span class="line">prefixSum    p = [p0, p1, p2.....pn<span class="number">-1</span>]</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="built_in">psum1</span>(<span class="type">float</span> a[], <span class="type">float</span> p[], <span class="type">long</span> n)&#123;</span><br><span class="line">  <span class="type">long</span> i = <span class="number">0</span>;</span><br><span class="line">  p[<span class="number">0</span>] = a[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt; n; i++)</span><br><span class="line">    	p[i] = p[i - <span class="number">1</span>] + a[i];	<span class="comment">//每次迭代计算一个元素的值</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//这种效率高一些</span></span><br><span class="line"><span class="comment">//我们将这种技术称为循环展开</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">psum2</span><span class="params">(<span class="type">float</span> a[], <span class="type">float</span> p[], <span class="type">long</span> n)</span></span>&#123;</span><br><span class="line">  <span class="type">long</span> i = <span class="number">0</span>;</span><br><span class="line">  p[<span class="number">0</span>] = a[<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">for</span>(i = <span class="number">1</span>; i &lt; n - <span class="number">1</span>; i += <span class="number">2</span>)&#123;</span><br><span class="line">    <span class="type">float</span> mid_val = p[i - <span class="number">1</span>] + a[i];</span><br><span class="line">    p[i] = mid_val;</span><br><span class="line">    p[i + <span class="number">1</span>] = mid_val + a[i + <span class="number">1</span>];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>为了评估上述函数， 引入 CPE 每个元素执行所需要的周期数 cycle per element</p>
+<ul>
+<li>可以帮我们理解迭代性能的理解</li>
+<li>psum1 的 CPE 为 9.0</li>
+<li>psum2 的 CPE 为 6.0</li>
+<li>我们应该集中精力优化这部分性能</li>
+</ul>
+<p><img src="/csapp_note.assets/image-20210904082038789.png" alt="image-20210904082038789"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/07/11/CPP/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/07/11/DEEP%20LEARNING/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%BC%AB%E6%B8%B8"><span class="nav-number">1.</span> <span class="nav-text">1 计算机系统漫游</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E4%BF%A1%E6%81%AF%E5%B0%B1%E6%98%AF-%E4%BD%8D-%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 信息就是 位 + 上下文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E7%A8%8B%E5%BA%8F%E8%A2%AB%E5%85%B6%E4%BB%96%E7%A8%8B%E5%BA%8F%E7%BF%BB%E8%AF%91%E6%88%90%E4%B8%8D%E5%90%8C%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 程序被其他程序翻译成不同的格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-%E5%A4%84%E7%90%86%E5%99%A8%E8%AF%BB%E5%B9%B6%E8%A7%A3%E9%87%8A%E5%AD%98%E5%82%A8%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E6%8C%87%E4%BB%A4"><span class="nav-number">1.3.</span> <span class="nav-text">1.4 处理器读并解释存储在内存中的指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-1-%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">1.4.1 系统的硬件组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-2-%E8%BF%90%E8%A1%8C-Hello-%E7%A8%8B%E5%BA%8F%E5%91%98"><span class="nav-number">1.3.2.</span> <span class="nav-text">1.4.2 运行 Hello 程序员</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5-%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98%E8%87%B3%E5%85%B3%E9%87%8D%E8%A6%81"><span class="nav-number">1.4.</span> <span class="nav-text">1.5 高速缓存至关重要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-6-%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87%E5%BD%A2%E6%88%90%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="nav-number">1.5.</span> <span class="nav-text">1.6 存储设备形成层次结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-7-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E7%A1%AC%E4%BB%B6"><span class="nav-number">1.6.</span> <span class="nav-text">1.7 操作系统管理硬件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-7-%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.7.</span> <span class="nav-text">1.7 进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-3-Virtual-Memory"><span class="nav-number">1.7.1.</span> <span class="nav-text">1.7.3 Virtual Memory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-4-Files"><span class="nav-number">1.7.2.</span> <span class="nav-text">1.7.4 Files</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E4%BF%A1%E6%81%AF%E7%9A%84%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">2 信息的表示和处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-%E5%BC%95%E8%A8%80"><span class="nav-number">2.1.</span> <span class="nav-text">2.0 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E4%BF%A1%E6%81%AF%E5%AD%98%E5%82%A8"><span class="nav-number">2.2.</span> <span class="nav-text">2.1 信息存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.1.1 十六进制表示法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-2-%E5%AD%97%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B0%8F"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.1.2 字数据大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-3-%E5%AF%BB%E5%9D%80%E5%92%8C%E5%AD%97%E8%8A%82%E9%A1%BA%E5%BA%8F"><span class="nav-number">2.2.3.</span> <span class="nav-text">2.1.3 寻址和字节顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-6-bool"><span class="nav-number">2.2.4.</span> <span class="nav-text">2.1.6 bool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-7-C-%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BA%A7%E8%BF%90%E7%AE%97"><span class="nav-number">2.2.5.</span> <span class="nav-text">2.1.7 C 语言中的位级运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-8-C-%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97"><span class="nav-number">2.2.6.</span> <span class="nav-text">2.1.8 C 语言中的逻辑运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-9-C-%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E7%A7%BB%E4%BD%8D%E8%BF%90%E7%AE%97"><span class="nav-number">2.2.7.</span> <span class="nav-text">2.1.9 C 语言中的移位运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-3-%E8%A1%A5%E7%A0%81%E7%BC%96%E7%A0%81"><span class="nav-number">2.2.8.</span> <span class="nav-text">2.2.3 补码编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-4-%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E5%92%8C%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="nav-number">2.2.9.</span> <span class="nav-text">2.2.4 有符号数和无符号数之间的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-5-C-%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E5%92%8C%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0"><span class="nav-number">2.2.10.</span> <span class="nav-text">2.2.5  C 语言中的有符号数和无符号数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-6-%E6%89%A9%E5%B1%95%E4%B8%80%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E4%BD%8D%E8%A1%A8%E7%A4%BA"><span class="nav-number">2.2.11.</span> <span class="nav-text">2.2.6 扩展一个数字的位表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-7-%E6%88%AA%E6%96%AD%E6%95%B0%E5%AD%97"><span class="nav-number">2.2.12.</span> <span class="nav-text">2.2.7 截断数字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-8-%E5%85%B3%E4%BA%8E%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E5%92%8C%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.2.13.</span> <span class="nav-text">2.2.8 关于有符号数和无符号数的建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-%E6%95%B4%E6%95%B0%E8%BF%90%E7%AE%97"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 整数运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1-%E6%97%A0%E7%AC%A6%E5%8F%B7%E5%8A%A0%E6%B3%95"><span class="nav-number">2.3.1.</span> <span class="nav-text">2.3.1 无符号加法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-2-%E8%A1%A5%E7%A0%81%E5%8A%A0%E6%B3%95"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.3.2 补码加法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-3-%E8%A1%A5%E7%A0%81%E7%9A%84%E9%9D%9E"><span class="nav-number">2.3.3.</span> <span class="nav-text">2.3.3 补码的非</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-4-%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0%E7%9A%84%E4%B9%98%E6%B3%95"><span class="nav-number">2.3.4.</span> <span class="nav-text">2.3.4 无符号数的乘法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-5-%E8%A1%A5%E7%A0%81%E4%B9%98%E6%B3%95"><span class="nav-number">2.3.5.</span> <span class="nav-text">2.3.5 补码乘法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-6-%E4%B9%98%E4%BB%A5%E5%B8%B8%E6%95%B0"><span class="nav-number">2.3.6.</span> <span class="nav-text">2.3.6 乘以常数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-7-%E9%99%A4%E4%BB%A5-2%E7%9A%84%E5%B9%82"><span class="nav-number">2.3.7.</span> <span class="nav-text">2.3.7 除以 2的幂</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-%E6%B5%AE%E7%82%B9%E6%95%B0"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 浮点数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-1-%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%B0%8F%E6%95%B0"><span class="nav-number">2.4.1.</span> <span class="nav-text">2.4.1 二进制小数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-2-IEEE-%E6%B5%AE%E7%82%B9%E8%A1%A8%E7%A4%BA"><span class="nav-number">2.4.2.</span> <span class="nav-text">2.4.2 IEEE 浮点表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-6-C-%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%B5%AE%E7%82%B9%E6%95%B0"><span class="nav-number">2.4.3.</span> <span class="nav-text">2.4.6 C 语言中的浮点数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-%E6%B5%AE%E7%82%B9%E6%95%B0%E5%8A%A0%E6%B3%95"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 浮点数加法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-%E6%80%BB%E7%BB%93"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Machine-Level-Representation-of-Programs"><span class="nav-number">3.</span> <span class="nav-text">3 Machine-Level Representation of Programs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-A-historaical-Perspecticve"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 A historaical Perspecticve</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-Program-Encodings"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Program Encodings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-1-Machine-Level-Code"><span class="nav-number">3.2.1.</span> <span class="nav-text">3.2.1 Machine-Level Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-2-Code-Examples"><span class="nav-number">3.2.2.</span> <span class="nav-text">3.2.2 Code Examples</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-3-Notes-on-Formatting"><span class="nav-number">3.2.3.</span> <span class="nav-text">3.2.3 Notes on Formatting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-Data-Formats"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 Data Formats</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-Accessing-Information"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 Accessing Information</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-1-Operand-Specifiers"><span class="nav-number">3.4.1.</span> <span class="nav-text">3.4.1 Operand Specifiers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-2-Data-Movement-Instructions"><span class="nav-number">3.4.2.</span> <span class="nav-text">3.4.2 Data Movement Instructions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-3-Data-Movement-Example"><span class="nav-number">3.4.3.</span> <span class="nav-text">3.4.3 Data Movement Example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-4-Pushing-and-Poping-Data"><span class="nav-number">3.4.4.</span> <span class="nav-text">3.4.4  Pushing and Poping Data</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-Arithmetic-and-Logical-Operations"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 Arithmetic and Logical Operations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-1-Load-%E6%8C%87%E4%BB%A4"><span class="nav-number">3.5.1.</span> <span class="nav-text">3.5.1 Load 指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-2-Unary-and-Binary-Operations"><span class="nav-number">3.5.2.</span> <span class="nav-text">3.5.2 Unary and Binary Operations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-3-Shift-Operations"><span class="nav-number">3.5.3.</span> <span class="nav-text">3.5.3 Shift Operations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6-Control"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 Control</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-1-Condition-Codes"><span class="nav-number">3.6.1.</span> <span class="nav-text">3.6.1 Condition Codes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-3-Jump-Instructions"><span class="nav-number">3.6.2.</span> <span class="nav-text">3.6.3 Jump Instructions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-6-%E7%94%A8%E6%9D%A1%E4%BB%B6%E4%BC%A0%E9%80%81%E6%9D%A5%E5%AE%9E%E7%8E%B0%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF"><span class="nav-number">3.6.3.</span> <span class="nav-text">3.6.6 用条件传送来实现条件分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-8-Switch-%E8%AF%AD%E5%8F%A5"><span class="nav-number">3.6.4.</span> <span class="nav-text">3.6.8 Switch 语句</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-7-%E8%BF%87%E7%A8%8B"><span class="nav-number">3.7.</span> <span class="nav-text">3.7 过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-1-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">3.7.1.</span> <span class="nav-text">3.7.1 运行时栈的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-4-%E6%A0%88%E4%B8%8A%E7%9A%84%E5%B1%80%E9%83%A8%E5%AD%98%E5%82%A8"><span class="nav-number">3.7.2.</span> <span class="nav-text">3.7.4 栈上的局部存储</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-8-%E6%95%B0%E7%BB%84%E5%88%86%E9%85%8D%E5%92%8C%E8%AE%BF%E9%97%AE"><span class="nav-number">3.8.</span> <span class="nav-text">3.8 数组分配和访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-9-%E5%BC%82%E8%B4%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">3.9.</span> <span class="nav-text">3.9 异质的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-9-1-%E7%BB%93%E6%9E%84"><span class="nav-number">3.9.1.</span> <span class="nav-text">3.9.1 结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-9-2-Union"><span class="nav-number">3.9.2.</span> <span class="nav-text">3.9.2 Union</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-9-3-%E6%95%B0%E6%8D%AE%E5%AF%B9%E9%BD%90"><span class="nav-number">3.9.3.</span> <span class="nav-text">3.9.3 数据对齐</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-10-%E5%9C%A8%E6%9C%BA%E5%99%A8%E7%BA%A7%E7%A8%8B%E5%BA%8F%E4%B8%AD%E5%B0%86%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%B5%B7%E6%9D%A5"><span class="nav-number">3.10.</span> <span class="nav-text">3.10 在机器级程序中将控制与数据结构起来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%80%BB%E7%BB%93-%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA"><span class="nav-number">3.11.</span> <span class="nav-text">3.总结 + 查漏补缺</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">5 程序性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-%E7%BC%96%E8%AF%91%E5%99%A8%E6%97%A0%E6%B3%95%E5%81%9A%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BC%98%E5%8C%96"><span class="nav-number">4.1.</span> <span class="nav-text">5.1 编译器无法做的一些优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-%E5%A6%82%E4%BD%95%E8%A1%A8%E7%A4%BA%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD"><span class="nav-number">4.2.</span> <span class="nav-text">5.2 如何表示程序性能</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Geng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Geng</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
+</html>

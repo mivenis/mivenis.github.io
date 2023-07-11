@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Git Guidebook  工作区：就是你在电脑上看到的目录，比如目录下testgit里的文件(.git隐藏目录版本库除外)。或者以后需要再新建的目录文件等等都属于工作区范畴。  版本库(Repository)：工作区有一个隐藏目录.git,这个不属于工作区，这是版本库。其中版本库里面存了很多东西，其中最重要的就是stage(暂存区)，还有Git为我们自动创建了第一个分支master,以及指向m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mivenis">
+<meta property="og:url" content="http://example.com/2023/07/11/Git%20Guidebook/index.html">
+<meta property="og:site_name" content="Mivenis">
+<meta property="og:description" content="Git Guidebook  工作区：就是你在电脑上看到的目录，比如目录下testgit里的文件(.git隐藏目录版本库除外)。或者以后需要再新建的目录文件等等都属于工作区范畴。  版本库(Repository)：工作区有一个隐藏目录.git,这个不属于工作区，这是版本库。其中版本库里面存了很多东西，其中最重要的就是stage(暂存区)，还有Git为我们自动创建了第一个分支master,以及指向m">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:/Users/mivenis/AppData/Roaming/Typora/typora-user-images/image-20230607150930963.png">
+<meta property="og:image" content="c:/Users/mivenis/AppData/Roaming/Typora/typora-user-images/image-20230607151148076.png">
+<meta property="article:published_time" content="2023-07-11T08:39:48.866Z">
+<meta property="article:modified_time" content="2023-07-11T08:32:48.408Z">
+<meta property="article:author" content="Geng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:/Users/mivenis/AppData/Roaming/Typora/typora-user-images/image-20230607150930963.png">
+
+<link rel="canonical" href="http://example.com/2023/07/11/Git%20Guidebook/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Mivenis</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mivenis</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/11/Git%20Guidebook/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Geng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mivenis">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-07-11 16:39:48 / 修改时间：16:32:48" itemprop="dateCreated datePublished" datetime="2023-07-11T16:39:48+08:00">2023-07-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Git-Guidebook"><a href="#Git-Guidebook" class="headerlink" title="Git Guidebook"></a>Git Guidebook</h1><p><img src="C:/Users/mivenis/AppData/Roaming/Typora/typora-user-images/image-20230607150930963.png" alt="image-20230607150930963"></p>
+<p><img src="C:/Users/mivenis/AppData/Roaming/Typora/typora-user-images/image-20230607151148076.png" alt="image-20230607151148076"></p>
+<p>工作区：就是你在<strong>电脑上看到的目录</strong>，比如目录下testgit里的文件(<strong>.git隐藏目录版本库除外</strong>)。或者以后需要再新建的目录文件等等都属于工作区范畴。</p>
+<p> <strong>版本库(Repository)<strong>：工作区有一个</strong>隐藏目录.git,<strong>这个不属于工作区，这是版本库。其中版本库里面存了很多东西，其中</strong>最重要的就是stage(暂存区)<strong>，还有</strong>Git为我们自动创建了第一个分支master,以及指向master的一个指针HEAD</strong>。</p>
+<p>我们前面说过使用Git提交文件到版本库有两步：</p>
+<p>第一步：是使用 git add 把文件添加进去，实际上就是把文件添加到暂存区。</p>
+<p>第二步：使用git commit提交更改，实际上就是把<strong>暂存区的所有内容提交到当前分支上</strong>。</p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="常规"><a href="#常规" class="headerlink" title="常规"></a>常规</h3><p>mkdir：     XX (创建一个空目录 XX指目录名)</p>
+<p>  pwd：     显示当前目录的路径。</p>
+<p>  <strong>git init     把当前的目录变成可以管理的git仓库，生成隐藏.git文件。</strong></p>
+<p>  <strong>git add XX    把xx文件添加到暂存区去进行追踪。</strong> <strong>git add . 追踪当前文件夹所有文件</strong></p>
+<p>  <strong>git commit –m 暂存区提交到本地仓库 “XX” 提交文件 –m 后面的是注释。</strong></p>
+<p>  git status    查看仓库状态，<strong>追踪的文件是否有变化</strong></p>
+<p>  <strong>git branch master main  将master分支修改为main分支</strong></p>
+<p>**<code>git branch -M main</code> 的作用是将当前分支的名称更改为 “main”<strong>，而不管是否已经存在名为 “main” 的分支。这在使用较新的 Git 版本中，遵循命名约定时特别常见，</strong>将默认分支从 “master” 改为 “main”**。</p>
+<p>Enter passphrase for key ‘&#x2F;c&#x2F;Users&#x2F;mivenis&#x2F;.ssh&#x2F;id_rsa:gjh123..</p>
+<p>  git diff XX   当查看状态知道文件变化后，查看XX文件修改了那些内容 </p>
+<h3 id="版本回退"><a href="#版本回退" class="headerlink" title="版本回退"></a><strong>版本回退</strong></h3><p>  <strong>git log     查看历史记录即版本</strong></p>
+<p>  <strong>git reset –hard HEAD^ （^上个版本，两个^即两个版本)或者 git reset –hard HEAD~ 回退到上一个版本</strong></p>
+<p>​            <strong>(如果想回退到100个版本，使用git reset –hard HEAD~100 )</strong></p>
+<p>如果回退到之前版本，那么之后的版本将不可见，该如何回退到最新版本呢？</p>
+<p><strong>git reset –hard 版本号</strong> ，但是现在的问题假如我已经关掉过一次命令行或者333内容的版本号我并不知道呢？要如何知道增加3333内容的版本号呢？可以通过如下命令即可获取到版本号：<strong>git reflog</strong></p>
+<p>  <strong>git reflog    查看历史记录的版本号id</strong></p>
+<h3 id="删除撤销"><a href="#删除撤销" class="headerlink" title="删除撤销"></a><strong>删除撤销</strong></h3><p>现在我可以有如下几种方法可以做修改：</p>
+<p>第一：如果我知道要删掉那些内容的话，直接手动更改去掉那些需要的文件，然后add添加到暂存区，最后commit掉。</p>
+<p>第二：我可以按以前的方法直接恢复到上一个版本。使用 git reset –hard HEAD^</p>
+<p>  <strong>git checkout – XX 把XX文件在工作区的修改全部撤销。</strong></p>
+<p>命令 git checkout –readme.txt 意思就是，<strong>把readme.txt文件在工作区做的修改全部撤销</strong>，这里有2种情况，如下：</p>
+<p>1.readme.txt自动修改后，还没有放到暂存区，使用 撤销修改就回到和版本库一模一样的状态。 2.另外一种是readme.txt已经放入暂存区了，接着又作了修改，<strong>撤销修改就回到添加暂存区后的状态</strong>。</p>
+<p> <strong>– 很重要，如果没有 – 的话，那么命令变成创建分支了。</strong></p>
+<p>  <strong>git rm XX     删除XX文件</strong>使用相对路径，然后commit 然后git push，不能直接在工作区删除，因为远程库绑定的是仓库，而非工作区</p>
+<h3 id="远程库"><a href="#远程库" class="headerlink" title="远程库"></a>远程库</h3><p>My token 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</p>
+<p>  <strong>git remote add origin https:&#x2F;&#x2F;<TOKEN>@github.com&#x2F;<user_name>&#x2F;<repo_name>.git 关联一个远程库</strong></p>
+<p><strong>git remote set-url origin [url]  更改远程连接</strong></p>
+<p> <strong>git remote rm origin 移除</strong></p>
+<p>git remote add origin [url]设置</p>
+<p>  <strong>git push –u(第一次要用-u 以后不需要) origin main 把当前main分支推送到远程库</strong></p>
+<p>  git clone https:&#x2F;&#x2F;<TOKEN>@github.com&#x2F;<user_name>&#x2F;<repo_name>.git <strong>从远程库中克隆</strong></p>
+<p>  git remote set-url origin  https:&#x2F;&#x2F;<your_token>@github.com&#x2F;<USERNAME>&#x2F;<REPO>.git修改现有项目的url</p>
+<p>  git rev-list –objects –all | grep “$(git verify-pack -v .git&#x2F;objects&#x2F;pack&#x2F;*.idx | sort -k 3 -n | tail -10 | awk ‘{print$1}’)”查           		 看有哪些大文件</p>
+<p> git filter-branch –force –index-filter ‘git rm -rf –cached –ignore-unmatch 文件&#x2F;文件夹’ –prune-empty –tag-name-filter cat – –all 移除对文件&#x2F;文件夹的引用</p>
+<p>  git for-each-ref –format&#x3D;‘delete %(refname)‘ refs&#x2F;original | git update-ref –stdin<br>          rm -rf .git&#x2F;refs&#x2F;original&#x2F;<br>          git reflog expire –expire&#x3D;now –all<br>          git gc –prune&#x3D;now<br>          git gc –aggressive –prune&#x3D;now回收空间</p>
+<p>   git push -f origin  覆盖提交 解决error: failed to push some refs to ‘xxxx</p>
+<p>  <strong>git remote –v 查看远程库的详细信息</strong></p>
+<p>  git push origin main Git会把master分支推送到远程库对应的远程分支上 </p>
+<p>  git pull origin master:brantest 从名为 “origin” 的远程仓库的 “master” 分支拉取最新的代码，并将其<strong>合并到本地的 “brantest” 分支中</strong>。</p>
+<h3 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h3><p>  <strong>git checkout –b dev 创建dev分支 并切换到dev分支上</strong></p>
+<p>  <strong>git branch 查看当前所有的分支</strong></p>
+<p>  <strong>git checkout master 切换回master分支</strong></p>
+<p>  <strong>git merge dev  在当前的分支上合并dev分支</strong></p>
+<p>  <strong>git branch –d dev 删除dev分支</strong></p>
+<p>  <strong>git branch name 创建分支</strong></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p><strong>git 的设置</strong>使用 <strong>git config</strong> 命令。</p>
+<p>显示当前的 git 配置信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git config --list</span><br><span class="line">credential.helper=osxkeychain</span><br><span class="line">core.repositoryformatversion=0</span><br><span class="line">core.filemode=true</span><br><span class="line">core.bare=false</span><br><span class="line">core.logallrefupdates=true</span><br><span class="line">core.ignorecase=true</span><br><span class="line">core.precomposeunicode=true</span><br></pre></td></tr></table></figure>
+
+<p>编辑 git 配置文件:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config -e    # 针对当前仓库 </span><br></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config -e --global   # 针对系统上所有仓库</span><br></pre></td></tr></table></figure>
+
+<p><strong>设置提交代码时的用户信息</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name &quot;runoob&quot;</span><br><span class="line">$ git config --global user.email test@runoob.com</span><br></pre></td></tr></table></figure>
+
+<p>如果去掉 <strong>–global</strong> 参数只对当前仓库有效。</p>
+<p>  git config –global http.proxy 127.0.0.1:7890  设置git的vpn代理 7890为vpn端口</p>
+<p>  git config –global –unset http.proxy  上述操作逆向操作</p>
+<p>  git config –global http.proxy <em>#查看git的http代理配置</em> </p>
+<p>  git config –global https.proxy <em>#查看git的https代理配置</em> </p>
+<p>  git config –global -l <em>#查看git的所有配置</em></p>
+<h3 id="隐藏"><a href="#隐藏" class="headerlink" title="隐藏"></a>隐藏</h3><p>  git stash 把当前的工作隐藏起来 等以后恢复现场后继续工作</p>
+<p>  git stash list 查看所有被隐藏的文件列表</p>
+<p>  git stash apply 恢复被隐藏的文件，但是内容不删除</p>
+<p>  git stash drop 删除文件</p>
+<p>  git stash pop 恢复文件的同时 也删除文件</p>
+<p>  git remote 查看远程库的信息</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/07/11/Docker/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Git-Guidebook"><span class="nav-number">1.</span> <span class="nav-text">Git Guidebook</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.1.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%84"><span class="nav-number">1.1.1.</span> <span class="nav-text">常规</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E5%9B%9E%E9%80%80"><span class="nav-number">1.1.2.</span> <span class="nav-text">版本回退</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%92%A4%E9%94%80"><span class="nav-number">1.1.3.</span> <span class="nav-text">删除撤销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E5%BA%93"><span class="nav-number">1.1.4.</span> <span class="nav-text">远程库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%94%AF"><span class="nav-number">1.1.5.</span> <span class="nav-text">分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">1.1.6.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E8%97%8F"><span class="nav-number">1.1.7.</span> <span class="nav-text">隐藏</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Geng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Geng</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
+</html>

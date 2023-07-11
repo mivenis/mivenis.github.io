@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="CPPG++gcc 与 g++ 分别是 gnu 的 c &amp; c++ 编译器 gcc&#x2F;g++ 在执行编译工作的时候，总共需要4步：  1、预处理生成 .i 的文件[预处理器cpp]  g++ -E hello.cpp &gt; p.txt  必须导入文件，不然一直输出 2、将预处理后的文件转换成汇编语言, 生成文件 .s [编译器egcs]  g++ -S hello.cpp 3、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mivenis">
+<meta property="og:url" content="http://example.com/2023/07/11/CPP/index.html">
+<meta property="og:site_name" content="Mivenis">
+<meta property="og:description" content="CPPG++gcc 与 g++ 分别是 gnu 的 c &amp; c++ 编译器 gcc&#x2F;g++ 在执行编译工作的时候，总共需要4步：  1、预处理生成 .i 的文件[预处理器cpp]  g++ -E hello.cpp &gt; p.txt  必须导入文件，不然一直输出 2、将预处理后的文件转换成汇编语言, 生成文件 .s [编译器egcs]  g++ -S hello.cpp 3、">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-07-11T08:39:48.861Z">
+<meta property="article:modified_time" content="2023-06-28T01:04:01.520Z">
+<meta property="article:author" content="Geng">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/07/11/CPP/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Mivenis</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mivenis</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/11/CPP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Geng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mivenis">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-11 16:39:48" itemprop="dateCreated datePublished" datetime="2023-07-11T16:39:48+08:00">2023-07-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-28 09:04:01" itemprop="dateModified" datetime="2023-06-28T09:04:01+08:00">2023-06-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="CPP"><a href="#CPP" class="headerlink" title="CPP"></a>CPP</h1><h2 id="G"><a href="#G" class="headerlink" title="G++"></a>G++</h2><p>gcc 与 g++ 分别是 gnu 的 c &amp; c++ 编译器 gcc&#x2F;g++ 在执行编译工作的时候，总共需要4步：</p>
+<ul>
+<li>1、预处理生成 .i 的文件[预处理器cpp]  g++ -E hello.cpp &gt; p.txt  必须导入文件，不然一直输出</li>
+<li>2、将预处理后的文件转换成汇编语言, 生成文件 .s [编译器egcs]  g++ -S hello.cpp</li>
+<li>3、有汇编变为目标代码(机器代码)生成 .o 的文件[汇编器as] g++ -c hello.cpp</li>
+<li>4、连接目标代码, 生成可执行程序 [链接器ld] g++ Test.o -L F:\vs2008\VC\include\iostream  # 将.o文件与所需的库文件链接整合形成.exe文件，这就是可执行文件</li>
+</ul>
+<p>g++ test.cpp -o newName.exe   #命名为新的可执行文件</p>
+<p>g++ test.cpp -include &#x2F;root&#x2F;pianopan.h  #包含头文件</p>
+<p>g++ test1.cpp test2.cpp   #多文件</p>
+<h2 id="include-header-h"><a href="#include-header-h" class="headerlink" title="include header.h"></a>include header.h</h2><h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><p>在 C++ 中，<code>#include</code> 指令用于引入头文件，以便在代码中使用相应的函数和类。<code>#include</code> 指令可以使用两种不同的语法：</p>
+<ol>
+<li><p>使用<strong>尖括号</strong> <code>&lt;&gt;</code> 引入系统头文件。例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这将引入 C++ 标准库的头文件 <code>iostream</code>，以便在代码中使用输入输出流等功能。</p>
+<p>使用尖括号引入头文件时，编译器会在<strong>系统默认的头文件路径</strong>中查找相应的头文件。通常情况下，系统默认的头文件路径包含了 C++ 标准库的头文件和操作系统的头文件等。</p>
+</li>
+<li><p>使用双引号 <code>&quot;&quot;</code> 引入用户自定义的头文件。例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;myheader.h&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这将引入名为 <code>myheader.h</code> 的头文件，以便在代码中使用相应的函数和类。</p>
+<p>使用双引号引入头文件时，<strong>编译器会先在当前目录中查找相应的头文件，如果找不到再在系统默认的头文件路径中查找</strong>。因此，使用双引号引入头文件时，应该将头文件放在当前目录或者指定的目录下，以便编译器能够找到相应的头文件。</p>
+</li>
+</ol>
+<p>总之，<code>#include</code> 指令用于引入头文件，可以使用尖括号或双引号指定头文件的路径。使用尖括号引入头文件时，编译器会在系统默认的头文件路径中查找相应的头文件；使用双引号引入头文件时，编译器会先在当前目录中查找相应的头文件，如果找不到再在系统默认的头文件路径中查找。</p>
+<p><strong><code>/usr</code> 是 Linux 系统中的一个重要目录</strong>，它包含了系统的共享资源，例如程序、库文件、头文件、文档等。在 C++ 编程中，<code>/usr</code> 目录通常包含了系统默认的头文件和库文件，可以用于编译和链接 C++ 代码。</p>
+<p>具体来说，<code>/usr/include</code> 目录包含了系<strong>统默认的头文件</strong>，例如 C++ 标准库的头文件、POSIX 标准库的头文件等。在编写 C++ 代码时，可以使用 <code>#include</code> 指令引入这些头文件，以便使用相应的函数和类。</p>
+<p>另外，<code>/usr/lib</code> 目录包含了<strong>系统默认的库文件</strong>，例如 C++ 标准库的库文件、POSIX 标准库的库文件等。在编译和链接 C++ 代码时，可以使用 <code>-l</code> 参数指定需要链接的库文件，例如 <code>-lstdc++</code> 参数将链接 C++ 标准库的库文件。</p>
+<p>需要注意的是，<code>/usr</code> 目录下的文件和目录通常需要管理员权限才能访问和修改。在编写 C++ 代码时，应该避免修改系统默认的头文件和库文件，以免影响系统的稳定性和安全性。如果需要使用自定义的头文件和库文件，可以将它们放在其他目录下，并将相应的路径添加到编译器的 include path 和 library path 中。</p>
+<p>总之，<code>/usr</code> 目录是 Linux 系统中的一个重要目录，包含了系统的共享资源。在 C++ 编程中，<code>/usr/include</code> 目录和 <code>/usr/lib</code> 目录通常包含了系统默认的头文件和库文件，可以用于编译和链接 C++ 代码。</p>
+<h2 id="main-函数接受参数"><a href="#main-函数接受参数" class="headerlink" title="main 函数接受参数"></a>main 函数接受参数</h2><p>在C和C++中，main函数可以接收命令行参数。它可以定义为以下两种形式之一：</p>
+<ol>
+<li><code>int main(int argc, char *argv[])</code>：argc是一个整数参数，表示<strong>命令行参数的数量（包括可执行文件名本身</strong>）。argv是一个字符指针数组，<strong>包含每个参数的字符串</strong>。<strong>argv[0]通常是可执行文件的名称</strong>，而argv[1]、argv[2]等是传递给程序的实际参数。</li>
+<li><code>int main(int argc, char **argv)</code>：这与<strong>第一种形式几乎相同，只是用指向指针的指针代替了数组表示法</strong>。</li>
+</ol>
+<p>下面是一个简单的示例代码，展示了如何在main函数中接收和使用命令行参数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;命令行参数的数量：%d\n&quot;</span>, argc);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; argc; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;参数 %d: %s\n&quot;</span>, i, argv[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个示例代码将打印命令行参数的数量以及每个参数的值。如果你在命令行上运行可执行文件并传递一些参数，它将显示相应的信息。</p>
+<p>在C和C++的main函数中，无法直接定义默认参数。main函数的参数是由操作系统传递的，操作系统不支持给main函数提供默认参数值。</p>
+<p>然而，你可以在代码中实现一个逻辑来处理缺少参数时的默认情况。你可以检查argc的值，如果它小于你期望的参数数量，就使用默认值。以下是一个示例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 默认参数值</span></span><br><span class="line">    <span class="type">int</span> defaultValue = <span class="number">10</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 检查参数数量</span></span><br><span class="line">    <span class="keyword">if</span> (argc &lt; <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;未提供参数，使用默认值：%d\n&quot;</span>, defaultValue);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 将命令行参数转换为整数</span></span><br><span class="line">        <span class="type">int</span> argValue = <span class="built_in">atoi</span>(argv[<span class="number">1</span>]);  <span class="comment">// 需要包含 &lt;stdlib.h&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;使用提供的参数值：%d\n&quot;</span>, argValue);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面的示例中，我们假设你的程序期望至少一个命令行参数。如果用户没有提供参数，它将使用默认值10。如果用户提供了参数，它将将该参数转换为整数并使用它。</p>
+<p>请记住，在main函数中，<strong>命令行参数始终以字符串形式传递</strong>，因此你可能需要根据需要进行适当的类型转换或处理。</p>
+<h2 id="pybind库"><a href="#pybind库" class="headerlink" title="pybind库"></a>pybind库</h2><p><code>PYBIND11_MODULE</code> 是一个 Pybind11 库提供的 C++ 宏，用于将 C++ 函数和类封装为 Python 模块。它的语法如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PYBIND11_MODULE</span>(module_name, module_variable)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Module definition</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">PYBIND11_MODULE</span>(my_lib, m)</span><br><span class="line">&#123;</span><br><span class="line">m.<span class="built_in">def</span>(<span class="string">&quot;my_add&quot;</span>, my_add);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>module_name</code> 是一个字符串，表示要创建的 Python 模块的名称；<code>module_variable</code> 是一个 C++ 变量，表示要创建的 Python 模块的变量名。在 <code>module_variable</code> 中，Pybind11 库将存储一个 <code>py::module</code> 类型的对象，该对象表示 Python 模块。</p>
+<p>在 <code>PYBIND11_MODULE</code> 宏的代码块中，可以使用 Pybind11 库提供的一系列函数来定义 Python 模块的行为。例如，可以使用 <code>module_variable.def()</code> 函数将 C++ 函数注册为 Python 模块的函数，使得 Python 代码可以调用该函数。</p>
+<p>因此，<code>PYBIND11_MODULE</code> 宏是 Pybind11 库中最重要的宏之一，它使得 C++ 开发者可以方便地将 C++ 函数和类封装为 Python 模块，从而在 Python 中使用 C++ 代码</p>
+<ol>
+<li><code>PYBIND11_MODULE(my_lib, m)</code> 定义了一个名为 <strong><code>my_lib</code> 的 Python 模块，并将其存储在变量 <code>m</code> 中</strong>。这个宏定义了一些必要的 C++ 代码，以便将 C++ 函数和类封装为 Python 模块。</li>
+<li><code>m.def(&quot;my_add&quot;, my_add)</code> <strong>将函数 <code>my_add</code> 注册到模块 <code>my_lib</code> 中</strong>。这个函数接受两个 PyTorch 张量 <code>a</code> 和 <code>b</code>，并返回一个新的张量，其值为 <code>2 * a + b</code>。在 Python 中，可以<strong>通过 <code>my_lib.my_add</code> 来调用这个函数</strong>。</li>
+</ol>
+<p>因此，这个代码片段的作用是<strong>将一个 C++ 函数封装为 Python 模块，使得 Python 代码可以通过 <code>my_lib.my_add</code> 来调用该函数。</strong></p>
+<h2 id="添加库和搜索路径"><a href="#添加库和搜索路径" class="headerlink" title="添加库和搜索路径"></a>添加库和搜索路径</h2><p>为 C++ 编译器添加搜索路径可以通过以下两种方式实现：</p>
+<ol>
+<li>使用 <strong><code>-I</code> 选项添加头文件搜索路径</strong></li>
+</ol>
+<p>可以使用 <code>-I</code> 选项来添加头文件搜索路径。例如，假设要将 <code>/path/to/include</code> 添加到搜索路径中，可以使用以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -I/path/to/include source.cpp -o output</span><br></pre></td></tr></table></figure>
+
+<p>这将告诉编译器在 <code>/path/to/include</code> 目录中查找头文件。</p>
+<ol>
+<li>使用 <strong><code>-L</code> 和 <code>-l</code> 选项添加库搜索路径</strong></li>
+</ol>
+<p>可以使用 <strong><code>-L</code> 选项来添加库搜索路径</strong>，<strong>使用 <code>-l</code> 选项来指定要链接的库</strong>。例如，假设要将 <code>/path/to/lib</code> 添加到搜索路径中，并链接名为 <code>mylib</code> 的库，可以使用以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ source.cpp -L/path/to/lib -lmylib -o output</span><br></pre></td></tr></table></figure>
+
+<p>这将告诉编译器在 <code>/path/to/lib</code> 目录中查找库文件，并链接名为 <code>mylib</code> 的库。</p>
+<p>注意，这些选项通常需要在<strong>编译命令的最前面指定</strong>，以确保编译器正确地查找头文件和库文件。</p>
+<p>在 C++ 中，可以使用<strong>绝对路径</strong>来包含头文件。要包含绝对路径的头文件，可以使用以下语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;/path/to/header.h&quot;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>/path/to/header.h</code> 是要包含的头文件的绝对路径。请注意，在使用绝对路径时，应该使用<strong>正斜杠 <code>/</code></strong> 而不是反斜杠 <code>\</code>，因为在 Unix 和 Linux 系统中，<strong>路径分隔符是正斜杠</strong>。在 <strong>Windows 中，路径分隔符是反斜杠 <code>\</code><strong>，但是在 C++ 中，反斜杠是转义字符，因此应该使</strong>用正斜杠 <code>/</code> 或双反斜杠 <code>\\</code></strong> 来表示路径分隔符</p>
+<p>使用绝对路径包含头文件的一个潜在问题是，如果将代码移动到另一个位置，头文件的路径可能会失效。为了避免这种情况，可以使用相对路径或将头文件路径添加到编译器的搜索路径中。</p>
+<p>在 Ubuntu 系统中，可以使用以下命令将 <strong>Python 的头文件路径</strong>添加到编译器的 include path 中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -I/usr/include/python3.10 example.cpp -o example</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>-I/usr/include/python3.10</code> 参数将 <code>/usr/include/python3.10</code> 目录添加到编译器的 include path 中。如果您使用的是其他操作系统或者编译器，可能需要相应地修改命令。</p>
+<p>另外，如果您使用的是 Pybind11 或其他 Python C++ 扩展库，还需要将 Python 的库文件路径添加到编译器的 library path 中，以便正确链接库文件。在 Ubuntu 系统中，可以使用以下命令将 Python 的库文件路径添加到编译器的 library path 中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -L/usr/lib/python3.10 example.cpp -o example</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>-L/usr/lib/python3.10</code> 参数将 <code>/usr/lib/python3.10</code> 目录添加到编译器的 library path 中。如果您使用的是其他操作系统或者编译器，可能需要相应地修改命令。</p>
+<p>需要注意的是，如果您使用的是 Pybind11 或其他 Python C++ 扩展库，可能需要使用特定的编译选项和链接选项，以便正确编译和链接代码。具体的选项取决于您使用的扩展库和操作系统。如果您遇到了其他问题，可以在 Pybind11 的 GitHub 仓库中搜索相关的问题或者在 Pybind11 的论坛中寻求帮助。</p>
+<h2 id="手动安装"><a href="#手动安装" class="headerlink" title="手动安装"></a>手动安装</h2><p>在 <strong>Linux 上安装 libtorch</strong> 可以按照以下步骤进行：</p>
+<ol>
+<li><p>下载适用于 CUDA 12.0 的 libtorch。可以从 PyTorch 官网下载适用于 CUDA 12.0 的 libtorch，下载链接为：<a target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/%E3%80%82">https://pytorch.org/get-started/locally/。</a></p>
+</li>
+<li><p>解压下载的 libtorch 文件。可以使用以下命令解压文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf libtorch-cxx11-abi-shared-with-deps-1.9.0%2Bcu102.zip</span><br></pre></td></tr></table></figure>
+
+<p>注意，这里的文件名可能因 libtorch 版本而异。</p>
+</li>
+<li><p>将 libtorch 复制到<strong>系统库目录</strong>。可以使用以下命令将 libtorch <strong>复制到 <code>/usr/local/lib</code> 目录</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy codesudo cp -r libtorch/ /usr/local/lib/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将 libtorch 的<strong>头文件复制到系统头文件目录</strong>。可以使用以下命令将 libtorch 的头文件<strong>复制到 <code>/usr/local/include</code> 目录</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp -r libtorch/include/ /usr/local/include</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>配置链接器</strong>。可以使用以下命令将 libtorch 的链接器配置文件复制到 <code>/etc/ld.so.conf.d/</code> 目录：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> libtorch/libtorch-cxx11-abi-shared-with-deps-1.9.0+cu102/libtorch.conf /etc/ld.so.conf.d/</span><br></pre></td></tr></table></figure>
+
+<p>如果没有这个文件，可以手动创建一个。可以使用以下命令创建一个名为 libtorch.conf 的文件：</p>
+</li>
+</ol>
+<p>​		sudo nano &#x2F;etc&#x2F;ld.so.conf.d&#x2F;libtorch.conf 然后，在文件中添加以下内容： &#x2F;usr&#x2F;local&#x2F;lib&#x2F;libtorch    保存文件并退出编辑器。这将告诉链接器在           				&#x2F;usr&#x2F;local&#x2F;lib&#x2F;libtorch 目录中查找 libtorch 库文件。</p>
+<ol start="6">
+<li><p>更新链接器缓存。可以使用以下命令更新链接器缓存：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ldconfig</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>现在，libtorch 库已经安装完成，可以在 C++ 代码中使用它了。在编译时，需要将 libtorch 的头文件路径和库文件路径添加到编译器的搜索路径中，并链接 libtorch 库。例如，可以使用以下命令编译一个使用 libtorch 的 C++ 程序：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -std=c++11 -I/usr/local/include/ -L/usr/local/lib/ -ltorch -o my_program my_program.cpp</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>-I</code> 选项指定 libtorch 的头文件路径，<code>-L</code> 选项指定 libtorch 的库文件路径，<code>-ltorch</code> 选项指定要链接的 libtorch 库。</p>
+<p><strong>在 Windows 上</strong>安装 libtorch 可以按照以下步骤进行：</p>
+<ol>
+<li>下载适用于 CUDA 12.0 的 libtorch。可以从 PyTorch 官网下载适用于 CUDA 12.0 的 libtorch，下载链接为：<a target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/%E3%80%82">https://pytorch.org/get-started/locally/。</a></li>
+<li>解压下载的 libtorch 文件。可以使用 Windows 自带的解压工具或第三方解压工具解压文件。</li>
+<li>将 libtorch 复制<strong>到系统库目录</strong>。可以将解压后的 libtorch 文件夹复制到 <strong><code>C:\Program Files (x86)\</code></strong> 目录下。</li>
+<li>配置环境变量。可以将 libtorch 的<strong>库文件路径添加到系统环境变量 <code>PATH</code></strong> 中。打开“控制面板” -&gt; “系统和安全” -&gt; “系统” -&gt; “高级系统设置” -&gt; “环境变量”，在“系统变量”中找到 <code>PATH</code> 变量，点击“编辑”，在变量值的末尾添加 <code>;C:\Program Files (x86)\libtorch\lib</code>，然后点击“确定”保存修改。</li>
+</ol>
+<p>现在，libtorch 库已经安装完成，可以在 C++ 代码中使用它了。在编译时，需要将 libtorch 的头文件路径和库文件路径添加到编译器的搜索路径中，并链接 libtorch 库。例如，可以使用以下命令编译一个使用 libtorch 的 C++ 程序：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy codecl /EHsc /I&quot;C:\Program Files (x86)\libtorch\include&quot; /link /LIBPATH:&quot;C:\Program Files (x86)\libtorch\lib&quot; my_program.cpp</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>/I</code> 选项指定 libtorch 的头文件路径，<code>/LIBPATH</code> 选项指定 libtorch 的库文件路径，<code>my_program.cpp</code> 是要编译的 C++ 程序的源代码文件。</p>
+<h2 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h2><p>在 Linux 系统中，<code>./</code> 和 <code>~</code> 都是用于表示文件路径的特殊符号。</p>
+<p><code>./</code> 表示当前目录，可以用于指定当前目录下的文件或目录。例如，如果当前目录下有一个名为 <code>my_program</code> 的可执行文件，可以使用以下命令运行它：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./my_program</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>./</code> 表示当前目录，告诉系统在当前目录下查找 <code>my_program</code> 文件。</p>
+<p><code>~</code> 表示当前用户的主目录，可以用于指定主目录下的文件或目录。例如，如果当前用户的主目录是 <code>/home/user/</code>，可以使用以下命令访问主目录下的 <code>Documents</code> 目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd ~/Documents</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>~</code> 表示当前用户的主目录，告诉系统在主目录下查找 <code>Documents</code> 目录。</p>
+<p>需要注意的是，<code>./</code> 和 <code>~</code> 符号都是相对路径，其解析结果取决于当前工作目录和当前用户的主目录。因此，在使用这些符号时，需要确保当前工作目录和当前用户的主目录正确无误。</p>
+<p>在 Linux 系统中，<code>/</code> 表示根目录，是整个文件系统的起点。所有的文件和目录都是从根目录开始的，因此根目录是文件系统中最高层的目录。</p>
+<h2 id="vscode"><a href="#vscode" class="headerlink" title="vscode"></a>vscode</h2><ol>
+<li><p>在 VS Code 中，打开“终端”窗口，输入以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -E -x c++ - -v &lt; /dev/null</span><br></pre></td></tr></table></figure>
+
+<p>这将输出 g++ 编译器的详细信息，包括搜索头文件的路径。</p>
+<ol>
+<li><p>在输出信息中，找到类似于以下的行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;...&quot; search starts here:</span><br></pre></td></tr></table></figure>
+
+<p>这里列出了 g++ 编译器搜索头文件的路径。通常情况下，这些路径包括系统默认的头文件路径和用户自定义的头文件路径。</p>
+</li>
+<li><p>在 VS Code 中，打开项目的 <code>c_cpp_properties.json</code> 文件。如果该文件不存在，可以通过以下步骤创建：</p>
+<ul>
+<li>在 VS Code 的左侧菜单栏中，点击“文件资源管理器”图标，打开文件资源管理器。</li>
+<li>在文件资源管理器中，找到项目的根目录，右键单击该目录，选择“新建文件”。</li>
+<li>在弹出的对话框中，输入文件名 <code>c_cpp_properties.json</code>，并点击“确定”。</li>
+</ul>
+</li>
+<li><p>在 <code>c_cpp_properties.json</code> 文件中，添加以下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">copy code&#123;</span><br><span class="line">    &quot;configurations&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;Linux&quot;,</span><br><span class="line">            &quot;includePath&quot;: [</span><br><span class="line">                &quot;$&#123;workspaceFolder&#125;/**&quot;,</span><br><span class="line">                &quot;/usr/include/**&quot;,</span><br><span class="line">                &quot;/usr/local/include/**&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;defines&quot;: [],</span><br><span class="line">            &quot;compilerPath&quot;: &quot;/usr/bin/g++&quot;,</span><br><span class="line">            &quot;cStandard&quot;: &quot;gnu17&quot;,</span><br><span class="line">            &quot;cppStandard&quot;: &quot;gnu++14&quot;,</span><br><span class="line">            &quot;intelliSenseMode&quot;: &quot;gcc-x64&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;version&quot;: 4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>includePath</code> 是一个数组，包含了编译器搜索头文件的路径。<code>$&#123;workspaceFolder&#125;/**</code> 表示项目的根目录及其子目录，<code>/usr/include/**</code> 和 <code>/usr/local/include/**</code> 分别表示系统默认的头文件路径和用户自定义的头文件路径。如果您的头文件在其他路径下，也可以在这里添加。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="Cmake"><a href="#Cmake" class="headerlink" title="Cmake"></a>Cmake</h2><ul>
+<li><p>执行文件不能命名为test,会重复</p>
+</li>
+<li><p>编译项目需要cd bulid &amp;&amp;cmake ..  &amp;&amp; <strong>mingw32-make | make</strong> 或者vscode build按钮，或者命令面板build    <strong>使用make clean 去除中间文件</strong></p>
+</li>
+<li><p>gcc 是一个编译器，可以编译<strong>很多种语言</strong>（C，C++，Java等），当我们的程序只有一个源文件的时候，可以直接用 gcc 命令编译它，但是当程序包含多个源文件的时候，用 gcc 逐个编译十分麻烦。</p>
+<p>make 工具是一个批处理工具，其本身并没有编译和链接的作用，而是类似于批处理的方式，通过调用 makefile 文件中用户指定的命令来进行编译和链接。</p>
+<p>makefile 文件中就包含了调用 gcc 去编译某个源文件的命令。</p>
+<p>工程非常大的时候，手写 makefile 文件十分麻烦，如果换一个平台 makefile 又要重新修改。</p>
+<p>cmake 就是生成 makefile 文件的。可以跨平台生成对应平台可以使用的 makefile 文件。</p>
+<p>cmake 是根据 Cmakefile.txt 文件来生成 makefile.txt 文件的。</p>
+<p>总的来说，<strong>Cmake 主要是编写 CmakeList.txt 文件，然后用 cmake 命令将 CmakeLists.txt 文件转化为 make 所需的 makefiel 文件</strong>，然后用 make 命令编译源码生成可执行程序或者共享库。</p>
+<p>因为 Cmake 编译会<strong>生成很多</strong>中间文件和 makefile 文件，所以建议新建一个新的目录来进行编译：</p>
+<p> <strong>make install是用来安装的</strong>，它也从Makefile中读取指令，安装到指定的位置。</p>
+<p><strong>make clean</strong>：清除编译产生的可执行文件及目标文件(object file，*.o)。</p>
+</li>
+<li><h2 id="CMAKE-SOURCE-DIR"><a href="#CMAKE-SOURCE-DIR" class="headerlink" title="CMAKE_SOURCE_DIR"></a>CMAKE_SOURCE_DIR</h2><p>表示：源码的根目录，也就是最top层 CMakeLists.txt文件存在的目录。</p>
+<h2 id="CMAKE-BINARY-DIR"><a href="#CMAKE-BINARY-DIR" class="headerlink" title="CMAKE_BINARY_DIR"></a>CMAKE_BINARY_DIR</h2><p>表示：为编译的binary的根目录，也就是运行CMake时的目录，一般就是<code>build</code>目录。</p>
+<h2 id="CMAKE-CURRENT-SOURCE-DIR"><a href="#CMAKE-CURRENT-SOURCE-DIR" class="headerlink" title="CMAKE_CURRENT_SOURCE_DIR"></a>CMAKE_CURRENT_SOURCE_DIR</h2><p>表示：当前正在运行的CMakeLists.txt文件的目录</p>
+<h2 id="CMAKE-CURRENT-BINARY-DIR"><a href="#CMAKE-CURRENT-BINARY-DIR" class="headerlink" title="CMAKE_CURRENT_BINARY_DIR"></a>CMAKE_CURRENT_BINARY_DIR</h2><p>表示：当前正处于的编译目录，例如如果正在运行src目录下的CMakeLists.txt， 该变量通常为<code>build/src</code>目录。</p>
+<h2 id="CMAKE-CXX-FLAGS-和-CMAKE-C-FLAGS"><a href="#CMAKE-CXX-FLAGS-和-CMAKE-C-FLAGS" class="headerlink" title="CMAKE_CXX_FLAGS 和 CMAKE_C_FLAGS"></a>CMAKE_CXX_FLAGS 和 CMAKE_C_FLAGS</h2><p>表示：当使用g++(或gcc)编译文件时，用于设置compiler flags, 也就是宏定义。</p>
+<h2 id="CMAKE-CXX-STANDARD"><a href="#CMAKE-CXX-STANDARD" class="headerlink" title="CMAKE_CXX_STANDARD"></a><strong>CMAKE_CXX_STANDARD</strong></h2><p><strong>表示：该变量用于编译target时，使用的c++标准，</strong>支持<code>98, 11, 14, 17, 20, 23</code>. 该变量的作用原理是：用于初始化target的<code>CXX_STANDARD</code>属性</p>
+</li>
+<li><p>命令</p>
+<ul>
+<li><p><strong>cmake_minimum_required(VERSION 3.12) 编译当前的cmake需要的最old的版本号</strong>，如果cmake版本号小于指定的版本号时，运行cmake 就报错。</p>
+</li>
+<li><p>file(GLOB <variable> [LIST_DIRECTORIES true|false] [RELATIVE <path>] [CONFIGURE_DEPENDS] [<globbing-expressions>…])含义： GLOB, 就是globbing的缩写， 该命令查找所有在当前目录（CMakeLists.txt所在目录，即<code>CMAKE_CURRENT_SOURCE_DIR</code>变量）下所有满足匹配通配符表达式的文件，并保存到给定的变量</p>
+<ul>
+<li>GLOB: 是关键字。</li>
+<li>variable: 保存文件名的变量</li>
+<li>LIST_DIRECTORIES true| false : 表示是否要保存文件的路径，默认保存。 （</li>
+<li>RELATIVE path: 给定该参数时，保存的路径中是相对于给定path的路径名。</li>
+<li>globbing-expressions: 通配符表达式。</li>
+</ul>
+</li>
+<li><p><strong>set(<variable> <value>… [PARENT_SCOPE]) 设置一个变量的值。</strong> <strong>如果不给定值，就表示取消该变量的设置</strong></p>
+</li>
+<li><p><code>set(&lt;variable&gt; &lt;value&gt;... CACHE &lt;type&gt; &lt;docstring&gt; [FORCE])</code>, 该命令会设置的cache变量会被保存到CMakeCache.txt 文档中， 可以打开看看的。</p>
+</li>
+<li><p>set_property(&lt;GLOBAL                      |<br>          DIRECTORY [<dir>]           |<br>          TARGET    [<target1> …]   |<br>          SOURCE    [<src1> …]<br>                    [DIRECTORY <dirs> …] |<br>                    [TARGET_DIRECTORY <targets> …]<br>          INSTALL   [<file1> …]     |<br>          TEST      [<test1> …]     |<br>          CACHE     [<entry1> …]    &gt;<br>         [APPEND] [APPEND_STRING]<br>         PROPERTY <name> [<value1> …])<br>​	set_property(TARGET hello_main PROPERTY CXX_STANDARD 11</p>
+</li>
+<li><p><strong>include(&lt;file|module&gt; [OPTIONAL] [RESULT_VARIABLE <var>]  [NO_POLICY_SCOPE])</strong></p>
+</li>
+<li><p><strong>message([<mode>] “message text” …)</strong></p>
+<p>   mode 关键字用于表示要记录的log的类型，常用的有：</p>
+<ul>
+<li><p>FATAL_ERROR： cmake errer, 遇到该错误，cmake 直接停止处理。</p>
+</li>
+<li><p>WARNING： 警告信息， 但是cmake会继续执行下去的。</p>
+</li>
+<li><p>STATUS： 用于记录一些cmake 运行过程中的有用的信息。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>project(项目名字, [VERSION 版本号] [DESCRIPTION 描述字符串] )</strong></p>
+</li>
+<li><p><strong>add_executable(name [WIN32] [MACOSX_BUNDLE] [EXCLUDE_FROM_ALL] [source1] [source2] …)</strong></p>
+<ul>
+<li><strong><code>name</code> : 即可执行文件的名字。windows平台下实际产生的可执行文件名为<code>name.exe</code>, linux平台下产生的可执行文件名就是<code>name</code>.</strong></li>
+<li><strong><code>source1</code>: 源文件列表， 多个源文件使用空格分开，说明如下：</strong><ul>
+<li>从3.1版本开始， 可以使用“generator expressions”语法表示（$&lt;…&gt;)依赖的源文件列表。</li>
+<li>在该命令中可以暂时不写依赖的源文件列表， 后续由<code>target_sources()</code> 再添加源文件列表。</li>
+</ul>
+</li>
+<li><code>EXCLUDE_FROM_ALL</code>：当指定该参数时，要构建的target 就会被排除在all target 列表之外， 这样当执行<code>make</code> 或 <code>make all</code>时， 该target 不会被编译。</li>
+</ul>
+</li>
+<li><p>add_library(other_name ALIAS mylib) 为给定的target添加一个别名name.</p>
+</li>
+<li><p><strong><code>add_library(&lt;name&gt; [STATIC | SHARED | MODULE] [EXCLUDE_FROM_ALL] [&lt;source&gt;...])</code> ， 该命令用于添加一个库文件的target, 包含静态库、动态库等。生成的是一个可以被使用的库</strong></p>
+<ul>
+<li><strong>name： target的名字。</strong></li>
+<li><strong>[STATIC | SHARED | MODULE]: STATIC 表示静态库，SHARED 表示动态库，MODULE表示模块库，可以在运行时使用 dlopen 之类的命令动态加载的插件。</strong></li>
+<li>**EXCLUDE_FROM_ALL: 与<code>add_**executable</code>命令中的参数相同，当指定该参数时，要构建的target 就会被排除在all target 列表之外。</li>
+<li>source: 源文件列表。</li>
+<li>add_library(hello_library STATIC src&#x2F;Hello.cpp) 生成的名字前面会加上lib，最终产生的文件是libhello.so</li>
+<li><h3 id="同时构建静态和动态库"><a href="#同时构建静态和动态库" class="headerlink" title="同时构建静态和动态库"></a>同时构建静态和动态库</h3></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果用这种方式，只会构建一个动态库，不会构建出静态库，虽然静态库的后缀是.a，因为两个target都是hello</span></span><br><span class="line"><span class="built_in">ADD_LIBRARY</span>(hello SHARED $&#123;LIBHELLO_SRC&#125;)</span><br><span class="line"><span class="built_in">ADD_LIBRARY</span>(hello STATIC $&#123;LIBHELLO_SRC&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改静态库的名字，这样是可以的，但是我们往往希望他们的名字是相同的，只是后缀不同而已</span></span><br><span class="line"><span class="built_in">ADD_LIBRARY</span>(hello SHARED $&#123;LIBHELLO_SRC&#125;)</span><br><span class="line"><span class="built_in">ADD_LIBRARY</span>(hello_static STATIC $&#123;LIBHELLO_SRC&#125;)</span><br><span class="line"> </span><br><span class="line"><span class="comment">//最简单的方法是：,这样能保证两个target不同名</span></span><br><span class="line"><span class="built_in">ADD_LIBRARY</span>(hello_static STATIC $&#123;LIBHELLO_SRC&#125;)</span><br><span class="line"><span class="built_in">SET_TARGET_PROPERTIES</span>(hello_static PROPERTIES  OUTPUT_NAME <span class="string">&quot;hello&quot;</span>)</span><br><span class="line"><span class="comment">//cmake 在构建一个新的target 时，会尝试清理掉其他使用这个名字的库，因为，在构建 libhello.so 时， 就会清理掉 libhello.a</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">ADD_LIBRARY</span>(hello SHARED $&#123;LIBHELLO_SRC&#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>link_directories  适用非标准共享库即第三方库</strong></p>
+<p>该指令的作用主要是指定要链接的库文件的路径，该指令有时候不一定需要。因为find_package和find_library指令可以得到库文件的绝对路径。不过你自己写的动态库文件放在自己新建的目录下时，可以用该指令指定该目录的路径以便工程能够找到</p>
+<p>特殊的环境变量 CMAKE_INCLUDE_PATH 和 CMAKE_LIBRARY_PATH</p>
+<p>注意：<strong>这两个是环境变量</strong>而不是 cmake 变量，可以在linux的bash中进行设置</p>
+<p>我们上面例子中使用了绝对路径INCLUDE_DIRECTORIES(&#x2F;usr&#x2F;include&#x2F;hello)来指明include路径的位置</p>
+<p>我们还可以使用另外一种方式，使用环境变量export CMAKE_INCLUDE_PATH&#x3D;&#x2F;usr&#x2F;include&#x2F;hello</p>
+</li>
+<li><p>target_link_libraries命令,适用标准共享库</p>
+</li>
+</ul>
+<p>  <strong>语法及参数含义</strong></p>
+<p>  使用语法: <code>target_link_libraries(&lt;target&gt; &lt;PRIVATE|PUBLIC|INTERFACE&gt; &lt;item&gt;...[&lt;PRIVATE|PUBLIC|INTERFACE&gt; &lt;item&gt;...]...)</code><br>  该命令的<strong>用于指定一个target的链接阶段的依赖库</strong>。 它还可以 propagate any include directories with PUBLIC or INTERFACE scope from the linked library target.该指令的作用为将目标文件与库文件进行链接上述指令中的<target>是指通过add_executable()和add_library()指令生成已经创建的目标文件。而[item]表示库文件没有后缀的名字。默认情况下，库依赖项是传递的。当这个目标链接到另一个目标时，链接到这个目标的库也会出现在另一个目标的连接线上。这个传递的接口存储在interface_link_libraries的目标属性中，可以通过设置该属性直接重写传递接口</p>
+<ul>
+<li><p>aux_source_directory(&lt; dir &gt; &lt; variable &gt;)搜集所有在指定路径下的源文件的文件名，将输出结果列表储存在指定的变量中。该命令主要用在那些使用显式模板实例化的工程上</p>
+</li>
+<li><p>target_link_libraries(<target> &lt;PRIVATE|PUBLIC|INTERFACE&gt; <item>…[&lt;PRIVATE|PUBLIC|INTERFACE&gt; <item>…]…)&#96;<br>   该命令的用于指定一个target的链接阶段的依赖库。 它还可以 propagate any include directories with PUBLIC or INTERFACE scope from the linked library target.</p>
+<p>   <strong>PRIVATE|PUBLIC|INTERFACE的作用</strong></p>
+<p>   <strong>使用举例</strong></p>
+   <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_link_libraries</span>( hello_binary PRIVATE hello_library)</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>find_library(<VAR> name | NAMES name1 [name2 …] [NAMES_PER_DIR]  ]</p>
+<p>将创建一个由<VAR>命名的缓存条目即cache变量，将<VAR>的值存入CMakeCache.txt中);或如果指定了NO_CACHE，由<VAR>命名的普通变量来存储此命令的结果。如果找到库，则结果(绝对路径+库全名)将存储在<VAR>中，除非清除<VAR>，否则不会重复搜索。如果没找到库，结果将为<VAR>-NOTFOUND。<br>NAMES：为要查找的库指定一个或多个可能的名字。当使用它来指定带有和不带有版本后缀的名称时，建议首先指定不受版本控制的名字，以便在发行版(distributions)提供的软件包之前找到本地构建的软件包。名字既可以仅是库的名称，如opencv_core，NAMES选项提供的name首先被视为库文件名，然后与特定于平台(platform-specific)的前缀(如lib)和后缀(如.so)一起考虑；也可以是库全称(前缀+库名+后缀，前缀如lib，后缀如.so,.a等)，如libopencv_core.a，这可用于在类UNIX系统上定位静态库。当给NAMES选项提供多个name时，默认情况下此命令将一次考虑一个name并在每个目录中搜索它。NAMES_PER_DIR选项告诉此命令一次考虑一个目录并搜索其中的所有名称</p>
+</li>
+<li><p>a<strong>dd_subdirectory(source_dir [binary_dir] [EXCLUDE_FROM_ALL]) cmake 命令会执行完子目录中的CmakeLists.txt文件之后，再执行后面的命令</strong></p>
+<ul>
+<li><p><strong>source_dir: 要添加的子目录， 建议使用相对路径啊（相对于当前位置）。</strong></p>
+</li>
+<li><p>binary_dir: 用于保存输出文件位置。 一般都不写。或者写bin</p>
+</li>
+<li><p>EXCLUDE_FROM_ALL: 该参数很熟悉了，就是编译的时候(make 或 make all），默认不被编译。如果想要编译它，显示自己执行。</p>
+</li>
+</ul>
+</li>
+<li><p>安装目标</p>
+<p>install(TARGETS targets … [EXPORT <export-name>]<br>[RUNTIME_DEPENDENCIES args…|RUNTIME_DEPENDENCY_SET <set-name>]<br>[[ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|<br>  PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE]<br> [DESTINATION <dir>]<br> [PERMISSIONS permissions…]<br> [CONFIGURATIONS [Debug|Release|…]]<br> [COMPONENT <component>]<br> [NAMELINK_COMPONENT <component>]<br> [OPTIONAL] [EXCLUDE_FROM_ALL]<br> [NAMELINK_ONLY|NAMELINK_SKIP]<br>] […]<br>[INCLUDES DESTINATION [<dir> …]]<br>)<br>TARGET targets: 指明了要安装的target.<br><strong>ARCHIVE|LIBRARY|RUNTIME等： 指明了target的类型</strong>。<br>DESTINATION dir: 指明了要安装到的路径。当使用相对路径时，是相对于变量CMAKE_INSTALL_PREFIX的, 该变量默认为&#x2F;usr&#x2F;local&#x2F;, 也可以在CMakeLists.txt文件中指定，也可以在运行CMAKE命令时指定，例如：cmake .. -DCMAKE_INSTALL_PREFIX&#x3D;&#x2F;install&#x2F;location</p>
+</li>
+<li><p>安装文件</p>
+<p>  <strong>使用语法与参数介绍</strong></p>
+<p>  <strong>该命令用于安装指定的文件到指定目录：</strong></p>
+  <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">install(&lt;FILES|PROGRAMS&gt; files...</span><br><span class="line">        TYPE &lt;type&gt; | DESTINATION &lt;dir&gt;</span><br><span class="line">        [<span class="meta">PERMISSIONS permissions...</span>]</span><br><span class="line">        [<span class="meta">CONFIGURATIONS [Debug|Release|...</span>]]</span><br><span class="line">        [<span class="meta">COMPONENT &lt;component&gt;</span>]</span><br><span class="line">        [<span class="meta">RENAME &lt;name&gt;</span>] [OPTIONAL] [EXCLUDE_FROM_ALL])</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>FILES files: 指定要安装的文件。</strong></li>
+<li><strong>DESTINATION dir: 指定要安装的路径。</strong></li>
+</ul>
+</li>
+<li><p>安装目录</p>
+<p>该命令用于安装指定的目录（包含目录内的文件）到指定目录。</p>
+<p><strong>使用语法与参数说明</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">install(DIRECTORY dirs...</span><br><span class="line">        TYPE &lt;type&gt; | DESTINATION &lt;dir&gt;</span><br><span class="line">        [<span class="meta">FILE_PERMISSIONS permissions...</span>]</span><br><span class="line">        [<span class="meta">DIRECTORY_PERMISSIONS permissions...</span>]</span><br><span class="line">        [<span class="meta">USE_SOURCE_PERMISSIONS</span>] [OPTIONAL] [MESSAGE_NEVER]</span><br><span class="line">        [<span class="meta">CONFIGURATIONS [Debug|Release|...</span>]]</span><br><span class="line">        [<span class="meta">COMPONENT &lt;component&gt;</span>] [EXCLUDE_FROM_ALL]</span><br><span class="line">        [<span class="meta">FILES_MATCHING</span>]</span><br><span class="line">        [[PATTERN &lt;pattern&gt; | REGEX &lt;regex&gt;]</span><br><span class="line">         [<span class="meta">EXCLUDE</span>] [PERMISSIONS permissions...]] [...])</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DIRECTORY dirs: 要安装的头文件的目录路径，默认为相对于当前的路径。 注意：如果路径以<code>/</code>结尾时， 会把路径里面的内容复制到给定路径，如果没有以<code>/</code>结尾，则也会复制该层目录的。</li>
+<li>DESTINATION: 要安装到的目录路径。</li>
+</ul>
+</li>
+<li><p>set_target_properties 命令<br>  <strong>该命令用于设置给定target的一些属性值，类似于类对象的成员变量的值</strong>。 它们会影响到该target如何被构建的。</p>
+<p>  set_target_properties(target1 target2 …PROPERTIES prop1 value1 prop2 value2 …)<br>  target1… : 要设置的target的名字。<br>  PROPERTIES: 后面跟要设置的属性的名字以及它们的值。</p>
+</li>
+</ul>
+<p>*#<strong>添加编译选项</strong>，包括使用 C++11 标准和定义 API_EXPORTS 宏*</p>
+<p>add_definitions(-std&#x3D;c++11)</p>
+<p>add_definitions(-DAPI_EXPORTS)</p>
+<p><em>#设置是否使用静态 CUDA 运行时库</em></p>
+<p>option(CUDA_USE_STATIC_CUDA_RUNTIME OFF)</p>
+<p>set(CMAKE_BUILD_TYPE Release) <em>#设置构建类型为 Release</em></p>
+<p>设置构建类型为 Release 表示<strong>使用编译器的优化选项</strong>来生成可执行文件或库文件，以便在生产环境中使用。在 Release 模式下，编译器会尽可能地优化代码，以提高程序的执行效率和性能。</p>
+<p>与之相对的是 Debug 模式，该模式下编译器会<strong>生成包含调试信息的可执行文件或库文</strong>件，以便在调试过程中使用。Debug 模式下不会进行优化，因此生成的可执行文件或库文件会比 Release 模式下的文件更大，执行效率也会更低。</p>
+<p>在 CMake 中，可以使用 <code>CMAKE_BUILD_TYPE</code> 变量来设置构建类型。例如，<code>set(CMAKE_BUILD_TYPE Release)</code> 表示设置构建类型为 Release。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/11/18/mysql/" rel="prev" title="mysql">
+      <i class="fa fa-chevron-left"></i> mysql
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/07/11/csapp_note/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CPP"><span class="nav-number">1.</span> <span class="nav-text">CPP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#G"><span class="nav-number">1.1.</span> <span class="nav-text">G++</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#include-header-h"><span class="nav-number">1.2.</span> <span class="nav-text">include header.h</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%B3%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">用法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-%E5%87%BD%E6%95%B0%E6%8E%A5%E5%8F%97%E5%8F%82%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">main 函数接受参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pybind%E5%BA%93"><span class="nav-number">1.4.</span> <span class="nav-text">pybind库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%BA%93%E5%92%8C%E6%90%9C%E7%B4%A2%E8%B7%AF%E5%BE%84"><span class="nav-number">1.5.</span> <span class="nav-text">添加库和搜索路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85"><span class="nav-number">1.6.</span> <span class="nav-text">手动安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84"><span class="nav-number">1.7.</span> <span class="nav-text">路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vscode"><span class="nav-number">1.8.</span> <span class="nav-text">vscode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cmake"><span class="nav-number">1.9.</span> <span class="nav-text">Cmake</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CMAKE-SOURCE-DIR"><span class="nav-number">1.10.</span> <span class="nav-text">CMAKE_SOURCE_DIR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CMAKE-BINARY-DIR"><span class="nav-number">1.11.</span> <span class="nav-text">CMAKE_BINARY_DIR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CMAKE-CURRENT-SOURCE-DIR"><span class="nav-number">1.12.</span> <span class="nav-text">CMAKE_CURRENT_SOURCE_DIR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CMAKE-CURRENT-BINARY-DIR"><span class="nav-number">1.13.</span> <span class="nav-text">CMAKE_CURRENT_BINARY_DIR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CMAKE-CXX-FLAGS-%E5%92%8C-CMAKE-C-FLAGS"><span class="nav-number">1.14.</span> <span class="nav-text">CMAKE_CXX_FLAGS 和 CMAKE_C_FLAGS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CMAKE-CXX-STANDARD"><span class="nav-number">1.15.</span> <span class="nav-text">CMAKE_CXX_STANDARD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%97%B6%E6%9E%84%E5%BB%BA%E9%9D%99%E6%80%81%E5%92%8C%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-number">1.15.1.</span> <span class="nav-text">同时构建静态和动态库</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Geng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Geng</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
+</html>
